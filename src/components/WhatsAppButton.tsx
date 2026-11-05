@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   MessageSquare,
@@ -104,8 +104,53 @@ export function WhatsAppButton() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedDept, setSelectedDept] = useState<'all' | 'cameras' | 'lenses' | 'video' | 'billing'>('all');
   const [customQuery, setCustomQuery] = useState('');
+  const [agents, setAgents] = useState<Agent[]>(AGENTS);
 
-  const filteredAgents = AGENTS.filter(
+  // Sync configured mobile numbers from admin panel
+  useEffect(() => {
+    const loadConfiguredNumbers = () => {
+      try {
+        const saved = localStorage.getItem('mik_theme_config');
+        if (saved) {
+          const cfg = JSON.parse(saved);
+          setAgents((prev) =>
+            prev.map((agent) => {
+              let newRawPhone = '';
+              if (agent.id === 'idrees' && cfg.whatsappIdrees) newRawPhone = cfg.whatsappIdrees;
+              else if (agent.id === 'shoeb' && cfg.whatsappShoeb) newRawPhone = cfg.whatsappShoeb;
+              else if (agent.id === 'zameer' && cfg.whatsappZameer) newRawPhone = cfg.whatsappZameer;
+              else if (agent.id === 'support' && (cfg.whatsappSupport || cfg.whatsappNumber)) {
+                newRawPhone = cfg.whatsappSupport || cfg.whatsappNumber;
+              }
+
+              if (newRawPhone) {
+                const digits = newRawPhone.replace(/\D/g, '');
+                const cleanPhone = digits.length === 10 ? `91${digits}` : digits;
+                return {
+                  ...agent,
+                  phone: cleanPhone,
+                  displayPhone: newRawPhone.startsWith('+') ? newRawPhone : `+${newRawPhone}`,
+                };
+              }
+              return agent;
+            })
+          );
+        }
+      } catch (e) {
+        console.warn('Failed to load WhatsApp config:', e);
+      }
+    };
+
+    loadConfiguredNumbers();
+    window.addEventListener('mik_whatsapp_updated', loadConfiguredNumbers);
+    window.addEventListener('storage', loadConfiguredNumbers);
+    return () => {
+      window.removeEventListener('mik_whatsapp_updated', loadConfiguredNumbers);
+      window.removeEventListener('storage', loadConfiguredNumbers);
+    };
+  }, []);
+
+  const filteredAgents = agents.filter(
     (agent) => selectedDept === 'all' || agent.department === selectedDept
   );
 
@@ -115,7 +160,7 @@ export function WhatsAppButton() {
   };
 
   const handlePromptClick = (prompt: (typeof QUICK_PROMPTS)[0]) => {
-    const targetAgent = AGENTS.find((a) => a.id === prompt.agentId) || AGENTS[0];
+    const targetAgent = agents.find((a) => a.id === prompt.agentId) || agents[0];
     openWhatsApp(targetAgent.phone, prompt.text);
   };
 

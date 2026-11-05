@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <rect width="32" height="32" rx="7" fill="#0c0b09" stroke="#F5821F" stroke-width="1.5"/>
+  <!-- Crown / King Motif -->
+  <path d="M9 13L12 16L16 11L20 16L23 13V18H9V13Z" fill="#F5821F"/>
+  <!-- Camera Lens Ring -->
+  <circle cx="16" cy="22" r="4.5" fill="#181613" stroke="#F5821F" stroke-width="1.5"/>
+  <circle cx="16" cy="22" r="2" fill="#F5821F"/>
+</svg>

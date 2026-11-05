@@ -8,6 +8,7 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
+import { AIAssistantWidget } from '@/components/AIAssistantWidget';
 import { PWARegistration } from '@/components/PWARegistration';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
@@ -29,6 +30,15 @@ export const metadata: Metadata = {
   description: "Official store for Mi King's DSLR Camera Shop. Shop Canon, Nikon, Sony Alpha, DJI Drones, lenses, and certified pre-owned equipment with 30-day returns and 1-2 year warranty.",
   keywords: "Mi King cameras, camera shop Hyderabad, DSLR cameras, mirrorless cameras, Canon 90D, Nikon D7500, Sony A7, DJI Drones, camera lenses Hyderabad",
   manifest: '/manifest.webmanifest',
+  icons: {
+    icon: [
+      { url: '/icon', sizes: '32x32', type: 'image/png' },
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+    apple: [
+      { url: '/apple-icon', sizes: '180x180', type: 'image/png' },
+    ],
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
@@ -76,6 +86,7 @@ export default function RootLayout({
               <MobileBottomNav />
             </Suspense>
             <WhatsAppButton />
+            <AIAssistantWidget />
           </CartProvider>
         </ThemeProvider>
       </body>
