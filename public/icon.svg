@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Crisp high-contrast white squircle background badge -->
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="2"/>
+  
+  <!-- Shutter Button in brand orange -->
+  <rect x="16" y="14" width="8" height="4" rx="1.5" fill="#F5821F"/>
+
+  <!-- Top Viewfinder / Flash bump -->
+  <path d="M25 15C25 14 26 13 27 13H37C38 13 39 14 39 15V19H25V15Z" fill="#1C1917"/>
+
+  <!-- Camera Body -->
+  <rect x="12" y="18" width="40" height="30" rx="6" fill="#1C1917"/>
+
+  <!-- Grip texture line -->
+  <rect x="15" y="22" width="3" height="22" rx="1.5" fill="#292524"/>
+
+  <!-- Outer Lens Ring (Brand Orange #F5821F) -->
+  <circle cx="34" cy="33" r="11" fill="#F5821F"/>
+
+  <!-- Inner Lens Barrel (Dark Metal) -->
+  <circle cx="34" cy="33" r="8.5" fill="#0C0A09"/>
+
+  <!-- Optical Glass Element (Deep Slate) -->
+  <circle cx="34" cy="33" r="6" fill="#1E293B"/>
+
+  <!-- Glass reflection glint -->
+  <circle cx="32" cy="31" r="2.2" fill="#FFFFFF" fill-opacity="0.85"/>
+
+  <!-- Red recording sensor dot -->
+  <circle cx="47" cy="23" r="1.8" fill="#EF4444"/>
+</svg>

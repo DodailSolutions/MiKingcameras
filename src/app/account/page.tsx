@@ -374,182 +374,182 @@ export default function AccountPage() {
   };
 
   // -------------------------------------------------------------
-  // VIEW A: If Customer is NOT Logged In, Render Real Customer Auth Form
+  // VIEW A: If Customer is NOT Logged In, Render Clean Amazon/Myntra Modest Auth Form
   // -------------------------------------------------------------
   if (!currentUser) {
     return (
-      <div className="max-w-xl mx-auto px-4 py-8 sm:py-14 space-y-6">
-        <div className="text-center space-y-3">
-          <div className="inline-flex items-center p-3 px-4 rounded-3xl bg-white border border-stone-200/90 shadow-sm">
-            <img
-              src={OFFICIAL_LOGO_BASE64}
-              alt="MI King's Cameras"
-              className="h-10 w-auto object-contain"
-            />
+      <div className="min-h-[82vh] py-8 sm:py-12 px-4 flex flex-col justify-between items-center">
+        <div className="w-full max-w-[390px] mx-auto space-y-5">
+          {/* Brand Logo Header (Amazon/Myntra Clean Style - No Box) */}
+          <div className="text-center">
+            <Link href="/" className="inline-block" aria-label="Mi King's Cameras Home">
+              <img
+                src={OFFICIAL_LOGO_BASE64}
+                alt="MI King's Cameras"
+                className="h-10 sm:h-11 w-auto object-contain mx-auto"
+              />
+            </Link>
           </div>
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-black text-stone-900 dark:text-white">
-              Customer Portal &amp; Orders
-            </h1>
-            <p className="text-xs text-stone-500 dark:text-stone-400 mt-1 max-w-sm mx-auto">
-              Access your equipment purchases, 18% GST tax invoices, and 1-year store warranty certificates.
-            </p>
-          </div>
-        </div>
 
-        {/* Tab Switcher: Sign In vs Create Account vs Guest Track */}
-        <div className="bg-stone-200/70 dark:bg-[#1a1815] p-1.5 rounded-2xl flex items-center justify-between gap-1 text-xs font-bold">
-          <button
-            type="button"
-            onClick={() => {
-              setAuthMode('login');
-              setAuthError(null);
-            }}
-            className={`flex-1 py-2 rounded-xl transition-all cursor-pointer text-center ${
-              authMode === 'login'
-                ? 'bg-white dark:bg-[#25221d] text-stone-900 dark:text-white shadow-sm'
-                : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
-            }`}
-          >
-            Sign In
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setAuthMode('register');
-              setAuthError(null);
-            }}
-            className={`flex-1 py-2 rounded-xl transition-all cursor-pointer text-center ${
-              authMode === 'register'
-                ? 'bg-white dark:bg-[#25221d] text-stone-900 dark:text-white shadow-sm'
-                : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
-            }`}
-          >
-            Create Account
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setAuthMode('guestTrack');
-              setAuthError(null);
-            }}
-            className={`flex-1 py-2 rounded-xl transition-all cursor-pointer text-center ${
-              authMode === 'guestTrack'
-                ? 'bg-white dark:bg-[#25221d] text-stone-900 dark:text-white shadow-sm'
-                : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
-            }`}
-          >
-            Track Consignment
-          </button>
-        </div>
+          {/* Modest White/Dark Card */}
+          <div className="bg-white dark:bg-[#151311] border border-stone-200/90 dark:border-stone-800 rounded-2xl p-6 sm:p-7 shadow-xs space-y-4 transition-colors">
+            {authSuccessMsg && (
+              <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-400 text-xs font-medium flex items-start gap-2">
+                <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" />
+                <span>{authSuccessMsg}</span>
+              </div>
+            )}
 
-        {/* Form Card */}
-        <div className="bg-white dark:bg-[#181613] border border-stone-200 dark:border-[#2a2621] rounded-3xl p-6 sm:p-8 shadow-xl space-y-5 transition-colors">
-          {authSuccessMsg && (
-            <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs font-semibold flex items-center gap-2.5">
-              <CheckCircle2 className="w-4 h-4 shrink-0" />
-              <span>{authSuccessMsg}</span>
-            </div>
-          )}
+            {authError && (
+              <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-700 dark:text-rose-400 text-xs font-medium flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                <span>{authError}</span>
+              </div>
+            )}
 
-          {authError && (
-            <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-400 text-xs font-semibold flex items-center gap-2.5">
-              <AlertCircle className="w-4 h-4 shrink-0" />
-              <span>{authError}</span>
-            </div>
-          )}
+            {/* MODE 1: Customer Sign In (Amazon Clean Pattern) */}
+            {authMode === 'login' && (
+              <form onSubmit={handleLogin} className="space-y-4">
+                <h1 className="text-2xl font-normal text-stone-900 dark:text-white tracking-tight">
+                  Sign in
+                </h1>
 
-          {/* MODE 1: Customer Sign In */}
-          {authMode === 'login' && (
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-stone-700 dark:text-stone-300">
-                  Email Address or Mobile Number
-                </label>
-                <div className="relative">
-                  <Mail className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <div className="space-y-1">
+                  <label className="block text-xs font-bold text-stone-800 dark:text-stone-200">
+                    Email or mobile phone number
+                  </label>
                   <input
                     type="text"
                     required
                     autoComplete="username"
-                    placeholder="Enter your email or phone"
                     value={loginEmail}
                     onChange={(e) => setLoginEmail(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-stone-50 dark:bg-[#201d19] border border-stone-200 dark:border-[#2e2a25] text-stone-900 dark:text-white text-xs placeholder-stone-400 focus:outline-none focus:border-[#F5821F] transition-all font-medium"
+                    placeholder="Enter email or 10-digit phone"
+                    className="w-full px-3 py-2 rounded-lg bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-white text-xs sm:text-sm placeholder-stone-400 focus:outline-none focus:border-[#F5821F] focus:ring-1 focus:ring-[#F5821F] transition-all font-medium"
                   />
                 </div>
-              </div>
 
-              <div className="space-y-1.5">
-                <div className="flex items-center justify-between">
-                  <label className="block text-xs font-bold text-stone-700 dark:text-stone-300">
-                    Password
-                  </label>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setAuthMode('forgot');
-                      setForgotStep('request');
-                      setForgotTarget(loginEmail);
-                      setAuthError(null);
-                    }}
-                    className="text-[11px] text-[#F5821F] font-bold hover:underline cursor-pointer"
-                  >
-                    Forgot Password?
-                  </button>
-                </div>
-                <div className="relative">
-                  <Lock className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    required
-                    autoComplete="current-password"
-                    placeholder="••••••••••••"
-                    value={loginPassword}
-                    onChange={(e) => setLoginPassword(e.target.value)}
-                    className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-stone-50 dark:bg-[#201d19] border border-stone-200 dark:border-[#2e2a25] text-stone-900 dark:text-white text-xs placeholder-stone-400 focus:outline-none focus:border-[#F5821F] transition-all font-medium"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 cursor-pointer"
-                  >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                className="w-full py-3 px-4 rounded-xl bg-[#F5821F] hover:bg-[#E0741A] text-black font-extrabold text-xs flex items-center justify-center gap-2 transition-all shadow-lg shadow-[#F5821F]/20 cursor-pointer"
-              >
-                <KeyRound className="w-4 h-4 stroke-[2.2]" />
-                <span>Sign In to Account</span>
-              </button>
-            </form>
-          )}
-
-          {/* MODE 2: Customer Registration */}
-          {authMode === 'register' && (
-            <form onSubmit={handleRegister} className="space-y-3.5">
-              <div className="space-y-1">
-                <label className="block text-xs font-bold text-stone-700 dark:text-stone-300">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Mohd Salman"
-                  value={regName}
-                  onChange={(e) => setRegName(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-stone-50 dark:bg-[#201d19] border border-stone-200 dark:border-[#2e2a25] text-stone-900 dark:text-white text-xs placeholder-stone-400 focus:outline-none focus:border-[#F5821F]"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1">
-                  <label className="block text-xs font-bold text-stone-700 dark:text-stone-300">
-                    Email Address
+                  <div className="flex items-center justify-between">
+                    <label className="block text-xs font-bold text-stone-800 dark:text-stone-200">
+                      Password
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setAuthMode('forgot');
+                        setForgotStep('request');
+                        setForgotTarget(loginEmail);
+                        setAuthError(null);
+                      }}
+                      className="text-xs text-[#E0741A] dark:text-[#F5821F] font-medium hover:underline cursor-pointer"
+                    >
+                      Forgot password?
+                    </button>
+                  </div>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      required
+                      autoComplete="current-password"
+                      placeholder="••••••••••••"
+                      value={loginPassword}
+                      onChange={(e) => setLoginPassword(e.target.value)}
+                      className="w-full px-3 pr-10 py-2 rounded-lg bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-white text-xs sm:text-sm placeholder-stone-400 focus:outline-none focus:border-[#F5821F] focus:ring-1 focus:ring-[#F5821F] transition-all font-medium"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 cursor-pointer"
+                      aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full py-2.5 px-4 rounded-lg bg-[#F5821F] hover:bg-[#E0741A] active:bg-[#c9630c] text-black font-semibold text-xs tracking-wide shadow-xs transition-colors cursor-pointer mt-1"
+                >
+                  Sign in
+                </button>
+
+                {/* Modest Amazon/Myntra Privacy Notice */}
+                <p className="text-[11px] text-stone-500 dark:text-stone-400 pt-1 leading-relaxed">
+                  By continuing, you agree to Mi King&apos;s{' '}
+                  <Link href="/terms" className="text-[#E0741A] dark:text-[#F5821F] hover:underline font-medium">
+                    Conditions of Use
+                  </Link>{' '}
+                  and{' '}
+                  <Link href="/privacy" className="text-[#E0741A] dark:text-[#F5821F] hover:underline font-medium">
+                    Privacy Notice
+                  </Link>.
+                </p>
+
+                {/* Divider: New to Mi King's? */}
+                <div className="relative my-4 flex items-center justify-center text-xs text-stone-400 before:border-t before:border-stone-200 dark:before:border-stone-800 before:flex-1 after:border-t after:border-stone-200 dark:after:border-stone-800 after:flex-1">
+                  <span className="px-3 bg-white dark:bg-[#151311] text-stone-500 dark:text-stone-400 text-[11px] font-medium">
+                    New to Mi King&apos;s?
+                  </span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAuthMode('register');
+                    setAuthError(null);
+                  }}
+                  className="w-full py-2.5 px-4 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50/70 dark:bg-stone-900/60 hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-800 dark:text-stone-200 font-semibold text-xs transition-colors shadow-xs text-center cursor-pointer"
+                >
+                  Create your Mi King&apos;s account
+                </button>
+              </form>
+            )}
+
+            {/* MODE 2: Customer Registration (Amazon/Myntra Clean Layout) */}
+            {authMode === 'register' && (
+              <form onSubmit={handleRegister} className="space-y-3.5">
+                <h1 className="text-2xl font-normal text-stone-900 dark:text-white tracking-tight">
+                  Create Account
+                </h1>
+
+                <div className="space-y-1">
+                  <label className="block text-xs font-bold text-stone-800 dark:text-stone-200">
+                    Your name
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="First and last name"
+                    value={regName}
+                    onChange={(e) => setRegName(e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-white text-xs sm:text-sm placeholder-stone-400 focus:outline-none focus:border-[#F5821F] focus:ring-1 focus:ring-[#F5821F]"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="block text-xs font-bold text-stone-800 dark:text-stone-200">
+                    Mobile number
+                  </label>
+                  <div className="flex gap-2">
+                    <span className="px-3 py-2 rounded-lg bg-stone-100 dark:bg-stone-800 border border-stone-300 dark:border-stone-700 text-xs font-semibold text-stone-700 dark:text-stone-300 flex items-center">
+                      IN +91
+                    </span>
+                    <input
+                      type="tel"
+                      required
+                      placeholder="10-digit mobile number"
+                      value={regPhone}
+                      onChange={(e) => setRegPhone(e.target.value)}
+                      className="flex-1 px-3 py-2 rounded-lg bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-white text-xs sm:text-sm placeholder-stone-400 focus:outline-none focus:border-[#F5821F] focus:ring-1 focus:ring-[#F5821F]"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="block text-xs font-bold text-stone-800 dark:text-stone-200">
+                    Email address
                   </label>
                   <input
                     type="email"
@@ -557,28 +557,13 @@ export default function AccountPage() {
                     placeholder="name@example.com"
                     value={regEmail}
                     onChange={(e) => setRegEmail(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-stone-50 dark:bg-[#201d19] border border-stone-200 dark:border-[#2e2a25] text-stone-900 dark:text-white text-xs placeholder-stone-400 focus:outline-none focus:border-[#F5821F]"
+                    className="w-full px-3 py-2 rounded-lg bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-white text-xs sm:text-sm placeholder-stone-400 focus:outline-none focus:border-[#F5821F] focus:ring-1 focus:ring-[#F5821F]"
                   />
                 </div>
-                <div className="space-y-1">
-                  <label className="block text-xs font-bold text-stone-700 dark:text-stone-300">
-                    Phone (WhatsApp)
-                  </label>
-                  <input
-                    type="tel"
-                    required
-                    placeholder="+91 90322 85420"
-                    value={regPhone}
-                    onChange={(e) => setRegPhone(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-stone-50 dark:bg-[#201d19] border border-stone-200 dark:border-[#2e2a25] text-stone-900 dark:text-white text-xs placeholder-stone-400 focus:outline-none focus:border-[#F5821F]"
-                  />
-                </div>
-              </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1">
-                  <label className="block text-xs font-bold text-stone-700 dark:text-stone-300">
-                    City / State
+                  <label className="block text-xs font-bold text-stone-800 dark:text-stone-200">
+                    Delivery City / State
                   </label>
                   <input
                     type="text"
@@ -586,244 +571,328 @@ export default function AccountPage() {
                     placeholder="Hyderabad, Telangana"
                     value={regCity}
                     onChange={(e) => setRegCity(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-stone-50 dark:bg-[#201d19] border border-stone-200 dark:border-[#2e2a25] text-stone-900 dark:text-white text-xs placeholder-stone-400 focus:outline-none focus:border-[#F5821F]"
+                    className="w-full px-3 py-2 rounded-lg bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-white text-xs sm:text-sm placeholder-stone-400 focus:outline-none focus:border-[#F5821F] focus:ring-1 focus:ring-[#F5821F]"
                   />
                 </div>
+
                 <div className="space-y-1">
-                  <label className="block text-xs font-bold text-stone-700 dark:text-stone-300">
-                    Create Password
+                  <label className="block text-xs font-bold text-stone-800 dark:text-stone-200">
+                    Password
                   </label>
                   <input
                     type="password"
                     required
-                    placeholder="Min 6 characters"
+                    placeholder="At least 6 characters"
                     value={regPassword}
                     onChange={(e) => setRegPassword(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-stone-50 dark:bg-[#201d19] border border-stone-200 dark:border-[#2e2a25] text-stone-900 dark:text-white text-xs placeholder-stone-400 focus:outline-none focus:border-[#F5821F]"
+                    className="w-full px-3 py-2 rounded-lg bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-white text-xs sm:text-sm placeholder-stone-400 focus:outline-none focus:border-[#F5821F] focus:ring-1 focus:ring-[#F5821F]"
                   />
+                  <p className="text-[11px] text-stone-400">Passwords must be at least 6 characters.</p>
                 </div>
-              </div>
 
-              <button
-                type="submit"
-                className="w-full mt-2 py-3 px-4 rounded-xl bg-[#F5821F] hover:bg-[#E0741A] text-black font-extrabold text-xs flex items-center justify-center gap-2 transition-all shadow-lg shadow-[#F5821F]/20 cursor-pointer"
-              >
-                <UserPlus className="w-4 h-4 stroke-[2.2]" />
-                <span>Complete Registration &amp; Sign In</span>
-              </button>
-            </form>
-          )}
+                <button
+                  type="submit"
+                  className="w-full mt-2 py-2.5 px-4 rounded-lg bg-[#F5821F] hover:bg-[#E0741A] active:bg-[#c9630c] text-black font-semibold text-xs tracking-wide shadow-xs transition-colors cursor-pointer"
+                >
+                  Verify mobile &amp; Create Account
+                </button>
 
-          {/* MODE 3: 100% Functional Forgot Password Flow */}
-          {authMode === 'forgot' && (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between pb-2 border-b border-stone-100 dark:border-[#24211d]">
-                <h3 className="font-black text-stone-900 dark:text-white text-xs uppercase tracking-wider flex items-center gap-1.5">
-                  <Key className="w-4 h-4 text-[#F5821F]" />
-                  <span>Password Recovery</span>
-                </h3>
+                <p className="text-[11px] text-stone-500 dark:text-stone-400 pt-1 leading-relaxed">
+                  By creating an account, you agree to Mi King&apos;s{' '}
+                  <Link href="/terms" className="text-[#E0741A] dark:text-[#F5821F] hover:underline font-medium">
+                    Conditions of Use
+                  </Link>{' '}
+                  and{' '}
+                  <Link href="/privacy" className="text-[#E0741A] dark:text-[#F5821F] hover:underline font-medium">
+                    Privacy Notice
+                  </Link>.
+                </p>
+
+                <div className="relative my-4 flex items-center justify-center text-xs text-stone-400 before:border-t before:border-stone-200 dark:before:border-stone-800 before:flex-1 after:border-t after:border-stone-200 dark:after:border-stone-800 after:flex-1">
+                  <span className="px-3 bg-white dark:bg-[#151311] text-stone-500 dark:text-stone-400 text-[11px] font-medium">
+                    Already have an account?
+                  </span>
+                </div>
+
                 <button
                   type="button"
-                  onClick={() => setAuthMode('login')}
-                  className="text-xs text-stone-500 hover:text-[#F5821F] font-bold"
+                  onClick={() => {
+                    setAuthMode('login');
+                    setAuthError(null);
+                  }}
+                  className="w-full py-2.5 px-4 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50/70 dark:bg-stone-900/60 hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-800 dark:text-stone-200 font-semibold text-xs transition-colors shadow-xs text-center cursor-pointer"
                 >
-                  Back to Sign In
+                  Sign in &rarr;
+                </button>
+              </form>
+            )}
+
+            {/* MODE 3: Password Assistance (Amazon Standard Pattern) */}
+            {authMode === 'forgot' && (
+              <div className="space-y-4">
+                <h1 className="text-2xl font-normal text-stone-900 dark:text-white tracking-tight">
+                  Password assistance
+                </h1>
+
+                {/* Step 1: Target Request */}
+                {forgotStep === 'request' && (
+                  <form onSubmit={handleForgotRequest} className="space-y-3.5">
+                    <p className="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
+                      Enter the email address or mobile phone number associated with your Mi King&apos;s account.
+                    </p>
+                    <div className="space-y-1">
+                      <label className="block text-xs font-bold text-stone-800 dark:text-stone-200">
+                        Email or mobile phone number
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g. name@example.com or 9849012345"
+                        value={forgotTarget}
+                        onChange={(e) => setForgotTarget(e.target.value)}
+                        className="w-full px-3 py-2 rounded-lg bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-white text-xs sm:text-sm focus:outline-none focus:border-[#F5821F] focus:ring-1 focus:ring-[#F5821F]"
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      className="w-full py-2.5 rounded-lg bg-[#F5821F] hover:bg-[#E0741A] text-black font-semibold text-xs transition-colors shadow-xs cursor-pointer"
+                    >
+                      Continue
+                    </button>
+                  </form>
+                )}
+
+                {/* Step 2: OTP Verification */}
+                {forgotStep === 'verify' && (
+                  <form onSubmit={handleForgotVerify} className="space-y-3.5">
+                    <div className="p-3 rounded-lg bg-[#F5821F]/10 border border-[#F5821F]/30 text-stone-800 dark:text-stone-200 text-xs space-y-1">
+                      <p className="font-bold text-[#E0741A] dark:text-[#F5821F]">Verification Code (OTP):</p>
+                      <p className="font-mono text-lg font-black tracking-widest text-stone-900 dark:text-white">
+                        {generatedOtp}
+                      </p>
+                      <p className="text-[11px] text-stone-500">
+                        Dispatched for security verification to {forgotTarget}. Enter the 6 digits below.
+                      </p>
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="block text-xs font-bold text-stone-800 dark:text-stone-200">
+                        Enter 6-digit code
+                      </label>
+                      <input
+                        type="text"
+                        maxLength={6}
+                        required
+                        placeholder="••••••"
+                        value={enteredOtp}
+                        onChange={(e) => setEnteredOtp(e.target.value)}
+                        className="w-full px-3 py-2 rounded-lg bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-white text-base font-mono tracking-widest text-center focus:outline-none focus:border-[#F5821F] focus:ring-1 focus:ring-[#F5821F]"
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="w-full py-2.5 rounded-lg bg-[#F5821F] hover:bg-[#E0741A] text-black font-semibold text-xs transition-colors shadow-xs cursor-pointer"
+                    >
+                      Verify Code &amp; Continue
+                    </button>
+                  </form>
+                )}
+
+                {/* Step 3: Set New Password */}
+                {forgotStep === 'newPassword' && (
+                  <form onSubmit={handleForgotResetPassword} className="space-y-3.5">
+                    <div className="space-y-1">
+                      <label className="block text-xs font-bold text-stone-800 dark:text-stone-200">
+                        New password
+                      </label>
+                      <input
+                        type="password"
+                        required
+                        placeholder="At least 6 characters"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        className="w-full px-3 py-2 rounded-lg bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-white text-xs sm:text-sm focus:outline-none focus:border-[#F5821F] focus:ring-1 focus:ring-[#F5821F]"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="block text-xs font-bold text-stone-800 dark:text-stone-200">
+                        Confirm new password
+                      </label>
+                      <input
+                        type="password"
+                        required
+                        placeholder="Re-enter password"
+                        value={confirmNewPassword}
+                        onChange={(e) => setConfirmNewPassword(e.target.value)}
+                        className="w-full px-3 py-2 rounded-lg bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-white text-xs sm:text-sm focus:outline-none focus:border-[#F5821F] focus:ring-1 focus:ring-[#F5821F]"
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="w-full py-2.5 rounded-lg bg-[#F5821F] hover:bg-[#E0741A] text-black font-semibold text-xs transition-colors shadow-xs cursor-pointer"
+                    >
+                      Save changes and sign in
+                    </button>
+                  </form>
+                )}
+
+                <div className="pt-2 text-center">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAuthMode('login');
+                      setAuthError(null);
+                    }}
+                    className="text-xs text-[#E0741A] dark:text-[#F5821F] font-semibold hover:underline cursor-pointer"
+                  >
+                    &larr; Back to Sign in
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* MODE 4: Guest Consignment Lookup */}
+            {authMode === 'guestTrack' && (
+              <form onSubmit={handleGuestTrack} className="space-y-3.5">
+                <div>
+                  <h1 className="text-2xl font-normal text-stone-900 dark:text-white tracking-tight">
+                    Track Consignment
+                  </h1>
+                  <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
+                    Check your package transit and GST invoice without signing in.
+                  </p>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="block text-xs font-bold text-stone-800 dark:text-stone-200">
+                    Consignment Order ID
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. MIK-982104"
+                    value={guestOrderId}
+                    onChange={(e) => setGuestOrderId(e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-white text-xs sm:text-sm font-mono uppercase focus:outline-none focus:border-[#F5821F] focus:ring-1 focus:ring-[#F5821F]"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="block text-xs font-bold text-stone-800 dark:text-stone-200">
+                    Registered Mobile Number
+                  </label>
+                  <input
+                    type="tel"
+                    placeholder="Enter 10-digit mobile"
+                    value={guestPhone}
+                    onChange={(e) => setGuestPhone(e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-white text-xs sm:text-sm focus:outline-none focus:border-[#F5821F] focus:ring-1 focus:ring-[#F5821F]"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full py-2.5 px-4 rounded-lg bg-[#F5821F] hover:bg-[#E0741A] active:bg-[#c9630c] text-black font-semibold text-xs tracking-wide shadow-xs transition-colors cursor-pointer"
+                >
+                  Track Package
+                </button>
+
+                {guestOrderResult && (
+                  <div className="p-3.5 rounded-xl bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 space-y-2 text-xs">
+                    <div className="flex justify-between items-center">
+                      <span className="font-bold text-stone-900 dark:text-white">{guestOrderResult.orderNumber}</span>
+                      <span className="bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-bold px-2 py-0.5 rounded-md text-[10px]">
+                        {guestOrderResult.status}
+                      </span>
+                    </div>
+                    <div>
+                      {guestOrderResult.items.map((it, i) => (
+                        <p key={i} className="text-stone-700 dark:text-stone-300">
+                          {it.name} &times; {it.quantity}
+                        </p>
+                      ))}
+                    </div>
+                    <p className="text-stone-500 text-[11px]">
+                      AWB: <span className="font-mono text-stone-800 dark:text-stone-200 font-bold">{guestOrderResult.trackingId}</span> ({guestOrderResult.courierPartner})
+                    </p>
+
+                    <div className="pt-2 flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => openInvoiceForOrder(guestOrderResult)}
+                        className="px-2.5 py-1.5 rounded-lg bg-[#F5821F] text-black font-bold text-xs flex items-center gap-1 shadow-xs cursor-pointer"
+                      >
+                        <Download className="w-3.5 h-3.5" />
+                        <span>GST Invoice</span>
+                      </button>
+                      <Link
+                        href={`/track?orderId=${guestOrderResult.orderNumber}`}
+                        className="px-2.5 py-1.5 rounded-lg border border-stone-300 dark:border-stone-700 text-stone-700 dark:text-stone-300 text-xs font-semibold"
+                      >
+                        Transit Details &rarr;
+                      </Link>
+                    </div>
+                  </div>
+                )}
+
+                <div className="pt-2 text-center">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAuthMode('login');
+                      setAuthError(null);
+                    }}
+                    className="text-xs text-[#E0741A] dark:text-[#F5821F] font-semibold hover:underline cursor-pointer"
+                  >
+                    &larr; Back to Sign in
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+
+          {/* Under Card Quick Links */}
+          {authMode === 'login' && (
+            <div className="text-center text-xs text-stone-500 dark:text-stone-400 space-y-1">
+              <div>
+                Looking for an order consignment?{' '}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAuthMode('guestTrack');
+                    setAuthError(null);
+                  }}
+                  className="text-[#E0741A] dark:text-[#F5821F] font-semibold hover:underline cursor-pointer"
+                >
+                  Track without signing in &rarr;
                 </button>
               </div>
-
-              {/* Step 1: Target Request */}
-              {forgotStep === 'request' && (
-                <form onSubmit={handleForgotRequest} className="space-y-3">
-                  <p className="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
-                    Enter your registered email address or mobile number. We will verify your account and provide a 6-digit security recovery code.
-                  </p>
-                  <div className="space-y-1">
-                    <label className="block text-xs font-bold text-stone-700 dark:text-stone-300">
-                      Email or Mobile
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. name@example.com or 9849012345"
-                      value={forgotTarget}
-                      onChange={(e) => setForgotTarget(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-stone-50 dark:bg-[#201d19] border border-stone-200 dark:border-[#2e2a25] text-stone-900 dark:text-white text-xs focus:outline-none focus:border-[#F5821F]"
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    className="w-full py-2.5 rounded-xl bg-[#F5821F] hover:bg-[#E0741A] text-black font-extrabold text-xs transition-all shadow-md cursor-pointer"
-                  >
-                    Send Recovery Code
-                  </button>
-                </form>
-              )}
-
-              {/* Step 2: OTP Verification */}
-              {forgotStep === 'verify' && (
-                <form onSubmit={handleForgotVerify} className="space-y-3">
-                  <div className="p-3 rounded-xl bg-[#F5821F]/10 border border-[#F5821F]/30 text-stone-800 dark:text-stone-200 text-xs space-y-1">
-                    <p className="font-bold text-[#F5821F]">Security Verification Code:</p>
-                    <p className="font-mono text-base font-black tracking-widest text-stone-900 dark:text-white">
-                      {generatedOtp}
-                    </p>
-                    <p className="text-[10px] text-stone-500">
-                      Dispatched for security verification to {forgotTarget}. Enter the 6 digits below to confirm identity.
-                    </p>
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="block text-xs font-bold text-stone-700 dark:text-stone-300">
-                      Enter 6-Digit Code
-                    </label>
-                    <input
-                      type="text"
-                      maxLength={6}
-                      required
-                      placeholder="e.g. 582194"
-                      value={enteredOtp}
-                      onChange={(e) => setEnteredOtp(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-stone-50 dark:bg-[#201d19] border border-stone-200 dark:border-[#2e2a25] text-stone-900 dark:text-white text-xs font-mono tracking-widest text-center text-base focus:outline-none focus:border-[#F5821F]"
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full py-2.5 rounded-xl bg-[#F5821F] hover:bg-[#E0741A] text-black font-extrabold text-xs transition-all shadow-md cursor-pointer"
-                  >
-                    Verify Code &amp; Continue
-                  </button>
-                </form>
-              )}
-
-              {/* Step 3: Set New Password */}
-              {forgotStep === 'newPassword' && (
-                <form onSubmit={handleForgotResetPassword} className="space-y-3">
-                  <div className="space-y-1">
-                    <label className="block text-xs font-bold text-stone-700 dark:text-stone-300">
-                      New Password
-                    </label>
-                    <input
-                      type="password"
-                      required
-                      placeholder="Min 6 characters"
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-stone-50 dark:bg-[#201d19] border border-stone-200 dark:border-[#2e2a25] text-stone-900 dark:text-white text-xs focus:outline-none focus:border-[#F5821F]"
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="block text-xs font-bold text-stone-700 dark:text-stone-300">
-                      Confirm New Password
-                    </label>
-                    <input
-                      type="password"
-                      required
-                      placeholder="Re-enter password"
-                      value={confirmNewPassword}
-                      onChange={(e) => setConfirmNewPassword(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-stone-50 dark:bg-[#201d19] border border-stone-200 dark:border-[#2e2a25] text-stone-900 dark:text-white text-xs focus:outline-none focus:border-[#F5821F]"
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full py-2.5 rounded-xl bg-[#F5821F] hover:bg-[#E0741A] text-black font-extrabold text-xs transition-all shadow-md cursor-pointer"
-                  >
-                    Update Password &amp; Log In
-                  </button>
-                </form>
-              )}
             </div>
           )}
 
-          {/* MODE 4: Guest Consignment Lookup */}
-          {authMode === 'guestTrack' && (
-            <form onSubmit={handleGuestTrack} className="space-y-4">
-              <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-stone-700 dark:text-stone-300">
-                  Consignment Order Number
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. MIK-982104"
-                  value={guestOrderId}
-                  onChange={(e) => setGuestOrderId(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-stone-50 dark:bg-[#201d19] border border-stone-200 dark:border-[#2e2a25] text-stone-900 dark:text-white text-xs font-mono uppercase focus:outline-none focus:border-[#F5821F]"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-stone-700 dark:text-stone-300">
-                  Registered Mobile Number
-                </label>
-                <input
-                  type="tel"
-                  placeholder="Enter 10-digit mobile"
-                  value={guestPhone}
-                  onChange={(e) => setGuestPhone(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-stone-50 dark:bg-[#201d19] border border-stone-200 dark:border-[#2e2a25] text-stone-900 dark:text-white text-xs focus:outline-none focus:border-[#F5821F]"
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="w-full py-3 px-4 rounded-xl bg-[#F5821F] hover:bg-[#E0741A] text-black font-extrabold text-xs flex items-center justify-center gap-2 transition-all shadow-lg shadow-[#F5821F]/20 cursor-pointer"
-              >
-                <Search className="w-4 h-4 stroke-[2.2]" />
-                <span>Locate My Consignment</span>
-              </button>
-
-              {/* Guest Order Result Card with Downloadable Invoice */}
-              {guestOrderResult && (
-                <div className="p-4 rounded-2xl bg-stone-50 dark:bg-[#201d19] border border-stone-200 dark:border-[#2e2a25] space-y-3 text-xs">
-                  <div className="flex justify-between items-center">
-                    <span className="font-extrabold text-stone-900 dark:text-white">{guestOrderResult.orderNumber}</span>
-                    <span className="bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-bold px-2 py-0.5 rounded-md text-[10px]">
-                      {guestOrderResult.status}
-                    </span>
-                  </div>
-                  <div>
-                    {guestOrderResult.items.map((it, i) => (
-                      <p key={i} className="font-semibold text-stone-700 dark:text-stone-300">
-                        {it.name} &times; {it.quantity}
-                      </p>
-                    ))}
-                  </div>
-                  <p className="text-stone-500 text-[11px]">
-                    AWB Tracking: <span className="font-mono text-stone-800 dark:text-stone-200 font-bold">{guestOrderResult.trackingId}</span> ({guestOrderResult.courierPartner})
-                  </p>
-
-                  <div className="pt-2 flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => openInvoiceForOrder(guestOrderResult)}
-                      className="px-3 py-1.5 rounded-xl bg-[#F5821F] text-black font-bold text-xs flex items-center gap-1.5 shadow-xs cursor-pointer"
-                    >
-                      <Download className="w-3.5 h-3.5" />
-                      <span>Download GST Invoice</span>
-                    </button>
-                    <Link
-                      href={`/track?orderId=${guestOrderResult.orderNumber}`}
-                      className="px-3 py-1.5 rounded-xl border border-stone-300 dark:border-stone-700 text-stone-700 dark:text-stone-300 text-xs font-semibold"
-                    >
-                      Transit Details &rarr;
-                    </Link>
-                  </div>
-                </div>
-              )}
-            </form>
-          )}
-        </div>
-
-        {/* Staff Quick Link */}
-        <div className="text-center text-xs text-stone-500">
-          <span>Are you showroom staff? </span>
-          <Link href="/admin" className="text-[#F5821F] font-bold hover:underline">
-            Open Staff Admin Console &rarr;
-          </Link>
+          {/* Amazon / Myntra Style Modest Footer */}
+          <div className="pt-6 border-t border-stone-200 dark:border-stone-800/80 text-center space-y-3">
+            <div className="flex items-center justify-center gap-5 sm:gap-6 text-[11px] text-stone-500 dark:text-stone-400 font-medium">
+              <Link href="/terms" className="hover:text-[#F5821F] hover:underline">
+                Conditions of Use
+              </Link>
+              <Link href="/privacy" className="hover:text-[#F5821F] hover:underline">
+                Privacy Notice
+              </Link>
+              <Link href="/contact" className="hover:text-[#F5821F] hover:underline">
+                Help &amp; Support
+              </Link>
+              <Link href="/admin" className="hover:text-[#F5821F] hover:underline">
+                Staff Admin
+              </Link>
+            </div>
+            <p className="text-[11px] text-stone-400 dark:text-stone-500">
+              &copy; 2012&ndash;2026, Mi King&apos;s DSLR Camera Shop or its affiliates. All rights reserved.
+            </p>
+          </div>
         </div>
 
         {/* Invoice Modal for Guest */}
