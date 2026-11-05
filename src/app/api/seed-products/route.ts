@@ -2,12 +2,20 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase-service';
 import { INITIAL_PRODUCTS } from '@/data/catalog';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * Admin Product Seeder Endpoint
  * Protected against unauthorized cyber attacks and abuse with bearer token authentication
  */
 export async function POST(req: NextRequest) {
   try {
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder')) {
+      return NextResponse.json(
+        { success: false, error: 'Database environment variables not configured on this host.' },
+        { status: 503 }
+      );
+    }
     // Security check: Validate admin secret authorization token
     const authHeader = req.headers.get('authorization');
     const secretKey = process.env.ADMIN_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
