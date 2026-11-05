@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -8,15 +8,19 @@ import {
   Package,
   Users,
   ShoppingCart,
-  ShieldAlert,
-  ArrowLeft,
-  Settings,
   Store,
-  Sparkles,
   Palette,
   Wand2,
   BookOpen,
   LogOut,
+  ExternalLink,
+  Plus,
+  Bell,
+  Layers,
+  Sparkles,
+  ChevronRight,
+  Menu,
+  X,
   ShieldCheck,
 } from 'lucide-react';
 import { AdminAuthProvider, useAdminAuth } from '@/context/AdminAuthContext';
@@ -25,133 +29,244 @@ import { AdminLoginForm } from '@/components/admin/AdminLoginForm';
 function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { admin, isAuthenticated, isLoading, logout } = useAdminAuth();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
-    { name: 'Products & Inventory', href: '/admin/products', icon: Package },
-    { name: 'Blogs & Pages CMS', href: '/admin/content', icon: BookOpen },
-    { name: 'Photo BG Remover', href: '/admin/media', icon: Wand2 },
-    { name: 'Orders & GST Invoices', href: '/admin/orders', icon: ShoppingCart },
-    { name: 'Theme & Layout Editor', href: '/admin/theme', icon: Palette },
-    { name: 'User Management', href: '/admin/users', icon: Users },
+    {
+      name: 'Dashboard',
+      href: '/admin',
+      icon: LayoutDashboard,
+      badge: null,
+      subItems: [
+        { name: 'Home & Activity', href: '/admin' },
+      ],
+    },
+    {
+      name: 'WooCommerce Orders',
+      href: '/admin/orders',
+      icon: ShoppingCart,
+      badge: '3',
+      badgeColor: 'bg-[#F5821F] text-black',
+      subItems: [
+        { name: 'All Orders', href: '/admin/orders' },
+        { name: 'Customer Reorders', href: '/admin/orders?view=reorders' },
+      ],
+    },
+    {
+      name: 'Products & Catalog',
+      href: '/admin/products',
+      icon: Package,
+      badge: '153',
+      badgeColor: 'bg-stone-700 text-stone-200',
+      subItems: [
+        { name: 'All Products', href: '/admin/products' },
+        { name: 'Categories', href: '/admin/products?tab=categories' },
+        { name: 'Add New', href: '/admin/products?action=new' },
+      ],
+    },
+    {
+      name: 'Photo BG Remover',
+      href: '/admin/media',
+      icon: Wand2,
+      badge: 'AI',
+      badgeColor: 'bg-purple-600 text-white',
+    },
+    {
+      name: 'Pages & Blog CMS',
+      href: '/admin/content',
+      icon: BookOpen,
+      badge: null,
+    },
+    {
+      name: 'Theme & Hotline',
+      href: '/admin/theme',
+      icon: Palette,
+      badge: null,
+    },
+    {
+      name: 'Staff & Roles',
+      href: '/admin/users',
+      icon: Users,
+      badge: '4',
+      badgeColor: 'bg-stone-700 text-stone-300',
+    },
   ];
 
-  // Loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-stone-100 dark:bg-[#0c0b09] flex items-center justify-center">
+      <div className="min-h-screen bg-[#1d2327] flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
           <div className="w-10 h-10 border-3 border-[#F5821F] border-t-transparent rounded-full animate-spin" />
-          <span className="text-xs text-stone-500 font-bold">Verifying security credentials...</span>
+          <span className="text-xs text-stone-300 font-bold">Verifying security credentials...</span>
         </div>
       </div>
     );
   }
 
-  // Authentication Guard
   if (!isAuthenticated || !admin) {
     return <AdminLoginForm />;
   }
 
   return (
-    <div className="min-h-screen bg-stone-100 dark:bg-[#0c0b09] text-stone-900 dark:text-stone-100 flex flex-col md:flex-row transition-colors">
-      {/* Admin Sidebar */}
-      <aside className="w-full md:w-64 bg-white dark:bg-[#151311] border-r border-stone-200 dark:border-[#24211d] flex flex-col justify-between shrink-0">
-        <div>
-          {/* Admin Header */}
-          <div className="p-5 border-b border-stone-200 dark:border-[#24211d] flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-[#F5821F] text-black font-black flex items-center justify-center text-sm shadow-md">
-                MI
-              </div>
-              <div>
-                <h1 className="text-sm font-black text-stone-900 dark:text-white leading-tight">
-                  Admin Console
-                </h1>
-                <span className="text-[10px] text-[#F5821F] font-bold">Mi King&apos;s Cameras</span>
-              </div>
-            </div>
+    <div className="min-h-screen bg-[#f0f0f1] dark:bg-[#0f0e0c] text-stone-900 dark:text-stone-100 flex flex-col font-sans">
+      {/* ------------------------------------------------------------- */}
+      {/* 1. Iconic WordPress Top Admin Toolbar (#1d2327) */}
+      {/* ------------------------------------------------------------- */}
+      <header className="h-9 sm:h-10 bg-[#1d2327] text-stone-300 px-3 sm:px-4 flex items-center justify-between text-xs border-b border-stone-800 z-30 shrink-0 select-none">
+        {/* Left Toolbar Items */}
+        <div className="flex items-center gap-2 sm:gap-4">
+          {/* Mobile hamburger toggle */}
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden text-stone-300 hover:text-white p-1"
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+          </button>
 
-            <div className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[9px] font-bold text-emerald-600 dark:text-emerald-400">Live</span>
+          {/* WordPress / Store Logo Icon */}
+          <div className="flex items-center gap-2">
+            <div className="w-5 h-5 rounded bg-[#F5821F] text-black font-black flex items-center justify-center text-[10px] shadow-xs">
+              MI
             </div>
-          </div>
-
-          {/* Navigation Links */}
-          <nav className="p-3 space-y-1">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = pathname === item.href;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${
-                    isActive
-                      ? 'bg-[#F5821F] text-black shadow-md shadow-[#F5821F]/20'
-                      : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white hover:bg-stone-100 dark:hover:bg-[#1f1c18]'
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  <span>{item.name}</span>
-                </Link>
-              );
-            })}
-          </nav>
-        </div>
-
-        {/* Bottom User Info, Sign Out & Return to Store */}
-        <div className="p-4 border-t border-stone-200 dark:border-[#24211d] space-y-3">
-          <div className="p-3 rounded-xl bg-stone-50 dark:bg-[#1a1815] border border-stone-200 dark:border-[#2a2621]">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                <span className="text-[11px] font-bold text-stone-900 dark:text-white truncate max-w-[130px]">
-                  {admin.name}
-                </span>
-              </div>
-              <button
-                type="button"
-                onClick={logout}
-                title="Sign out of admin console"
-                className="text-stone-400 hover:text-rose-500 transition-colors p-1"
-                aria-label="Sign out"
-              >
-                <LogOut className="w-3.5 h-3.5" />
-              </button>
-            </div>
-            <div className="flex items-center justify-between mt-1 text-[10px]">
-              <span className="text-[#F5821F] font-bold">{admin.role}</span>
-              <span className="text-stone-400">{admin.email}</span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-2">
             <Link
               href="/"
-              className="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl border border-stone-300 dark:border-stone-700 hover:bg-stone-200 dark:hover:bg-stone-800 text-[11px] font-bold text-stone-700 dark:text-stone-300 transition-colors text-center"
+              target="_blank"
+              className="flex items-center gap-1.5 hover:text-[#F5821F] font-semibold transition-colors truncate max-w-[150px] sm:max-w-none"
+              title="Visit Public Storefront"
             >
-              <Store className="w-3.5 h-3.5 text-[#F5821F]" />
-              <span>Store</span>
+              <Store className="w-3.5 h-3.5 text-stone-400" />
+              <span>Mi King&apos;s DSLR Camera Shop</span>
+              <ExternalLink className="w-3 h-3 opacity-60 hidden sm:inline" />
             </Link>
+          </div>
 
-            <button
-              type="button"
-              onClick={logout}
-              className="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 text-[11px] font-bold transition-colors cursor-pointer"
+          {/* Quick Add Buttons */}
+          <div className="hidden sm:flex items-center gap-1 pl-2 border-l border-stone-700">
+            <Link
+              href="/admin/products?action=new"
+              className="flex items-center gap-1 px-2 py-0.5 rounded hover:bg-stone-800 hover:text-white text-[11px] text-stone-400 font-medium transition-colors"
             >
-              <LogOut className="w-3.5 h-3.5" />
-              <span>Sign Out</span>
-            </button>
+              <Plus className="w-3 h-3 text-[#F5821F]" />
+              <span>New Product</span>
+            </Link>
+            <Link
+              href="/admin/orders"
+              className="flex items-center gap-1 px-2 py-0.5 rounded hover:bg-stone-800 hover:text-white text-[11px] text-stone-400 font-medium transition-colors"
+            >
+              <ShoppingCart className="w-3 h-3 text-emerald-400" />
+              <span>Orders <span className="bg-[#F5821F] text-black px-1 rounded text-[9px] font-black">3</span></span>
+            </Link>
           </div>
         </div>
-      </aside>
 
-      {/* Main Admin Content Area */}
-      <main className="flex-1 min-w-0 overflow-y-auto p-4 sm:p-8">
-        {children}
-      </main>
+        {/* Right Toolbar Items: Howdy Admin & Sign Out */}
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 text-[11px]">
+            <span className="text-stone-400 hidden sm:inline">Howdy,</span>
+            <span className="font-bold text-white">{admin.name}</span>
+            <span className="bg-stone-800 text-[#F5821F] font-mono text-[9px] font-bold px-1.5 py-0.5 rounded border border-stone-700 hidden sm:inline">
+              {admin.role}
+            </span>
+          </div>
+
+          <div className="h-4 w-px bg-stone-700 hidden sm:block" />
+
+          <button
+            type="button"
+            onClick={logout}
+            className="flex items-center gap-1 text-[11px] text-stone-400 hover:text-rose-400 transition-colors cursor-pointer py-1"
+          >
+            <LogOut className="w-3 h-3" />
+            <span className="hidden sm:inline">Log Out</span>
+          </button>
+        </div>
+      </header>
+
+      {/* ------------------------------------------------------------- */}
+      {/* 2. Main Admin Workspace (Classic Left Sidebar + Content) */}
+      {/* ------------------------------------------------------------- */}
+      <div className="flex-1 flex min-h-0">
+        {/* WordPress Style Left Sidebar (#1d2327) */}
+        <aside
+          className={`${
+            mobileMenuOpen ? 'block fixed inset-y-10 left-0 z-40 w-64' : 'hidden'
+          } md:block md:w-56 bg-[#1d2327] text-stone-300 flex flex-col justify-between shrink-0 select-none border-r border-stone-800`}
+        >
+          <div className="overflow-y-auto py-2">
+            <nav className="space-y-0.5">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = pathname === item.href;
+                return (
+                  <div key={item.href}>
+                    <Link
+                      href={item.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={`flex items-center justify-between px-3.5 py-2.5 text-xs font-semibold transition-colors group relative ${
+                        isActive
+                          ? 'bg-[#2271b1] text-white font-bold'
+                          : 'text-stone-300 hover:bg-[#2c3338] hover:text-[#F5821F]'
+                      }`}
+                    >
+                      {isActive && (
+                        <span className="absolute left-0 top-0 bottom-0 w-1 bg-[#F5821F]" />
+                      )}
+                      <div className="flex items-center gap-2.5">
+                        <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-stone-400 group-hover:text-[#F5821F]'}`} />
+                        <span>{item.name}</span>
+                      </div>
+                      {item.badge && (
+                        <span className={`text-[10px] font-black px-1.5 py-0.2 rounded-full ${item.badgeColor || 'bg-stone-700 text-white'}`}>
+                          {item.badge}
+                        </span>
+                      )}
+                    </Link>
+
+                    {/* Submenu links when active or hover */}
+                    {isActive && item.subItems && (
+                      <div className="bg-[#2c3338] py-1 pl-9 pr-3 space-y-1 text-[11px]">
+                        {item.subItems.map((sub) => (
+                          <Link
+                            key={sub.name}
+                            href={sub.href}
+                            onClick={() => setMobileMenuOpen(false)}
+                            className="block text-stone-300 hover:text-[#F5821F] py-0.5 transition-colors font-medium"
+                          >
+                            &bull; {sub.name}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </nav>
+          </div>
+
+          {/* WordPress System Status Footer in Sidebar */}
+          <div className="p-3 bg-[#181d20] border-t border-stone-800 text-[10px] text-stone-400 space-y-1">
+            <div className="flex items-center justify-between">
+              <span className="font-semibold text-stone-300">WooCommerce Next</span>
+              <span className="text-emerald-400 font-mono">v16.4</span>
+            </div>
+            <div className="flex items-center justify-between text-stone-400">
+              <span>Catalog Sync:</span>
+              <span className="text-stone-200">153 items</span>
+            </div>
+            <div className="flex items-center justify-between text-stone-400">
+              <span>Active Staff:</span>
+              <span className="text-stone-200">{admin.name.split(' ')[0]} ({admin.role})</span>
+            </div>
+          </div>
+        </aside>
+
+        {/* Main Content Workspace */}
+        <main className="flex-1 min-w-0 overflow-y-auto p-4 sm:p-6 lg:p-8">
+          {children}
+        </main>
+      </div>
     </div>
   );
 }
