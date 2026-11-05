@@ -135,7 +135,7 @@ export function AIAssistantWidget() {
           </div>
 
           <span className="bg-[#F5821F] text-black text-[10px] font-black px-2 py-0.5 rounded-full hidden sm:inline-block">
-            RAG
+            AI Bot
           </span>
         </motion.button>
       </div>
@@ -159,10 +159,10 @@ export function AIAssistantWidget() {
                 <div>
                   <div className="flex items-center gap-2">
                     <h3 className="text-sm font-black text-white leading-tight">
-                      Mi King&apos;s AI Concierge
+                      Mi King&apos;s AI Chatbot
                     </h3>
                     <span className="text-[9px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-1.5 py-0.5 rounded-full">
-                      Live RAG
+                      Online
                     </span>
                   </div>
                   <p className="text-[11px] text-stone-400 mt-0.5">
@@ -311,7 +311,7 @@ export function AIAssistantWidget() {
               </form>
 
               <div className="flex items-center justify-between text-[10px] text-stone-400 mt-2 px-1">
-                <span>⚡ Powered by Mi King&apos;s Store RAG</span>
+                <span>⚡ Powered by Mi King&apos;s Store Assistant</span>
                 <span className="font-semibold text-emerald-600 dark:text-emerald-400">
                   ● Verified 2026 Catalog
                 </span>
