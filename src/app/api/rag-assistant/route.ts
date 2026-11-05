@@ -7,6 +7,7 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const prompt = body?.prompt || body?.message || '';
+    const user = body?.user || null;
 
     if (!prompt || typeof prompt !== 'string' || !prompt.trim()) {
       return NextResponse.json(
@@ -15,18 +16,18 @@ export async function POST(request: Request) {
       );
     }
 
-    const response = await queryRAGAssistant(prompt);
+    const response = await queryRAGAssistant(prompt, user);
     return NextResponse.json(response);
   } catch (error: any) {
     console.error('RAG Assistant API Error:', error);
     return NextResponse.json(
       {
-        answer: "I'm having trouble connecting to our store knowledge base right now. You can chat with Mohd Idrees on WhatsApp at +91 90322 85420 for immediate personal assistance.",
-        sourceContexts: ['Fallback Store Hotline'],
+        answer: "I'm having trouble connecting to our store catalog right now. You can chat with our team on WhatsApp at +91 90322 85420 for immediate assistance.",
+        sourceContexts: ['Customer Help Desk'],
         suggestedAction: {
           type: 'whatsapp',
-          label: 'Chat with Mohd Idrees (+91 90322 85420)',
-          href: 'https://wa.me/919032285420?text=Hello%20Mi%20Kings%20Cameras,%20I%20need%20help%20with%20an%20order',
+          label: 'Chat on WhatsApp',
+          href: 'https://wa.me/919032285420',
         },
       },
       { status: 200 }

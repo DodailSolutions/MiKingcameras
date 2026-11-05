@@ -166,34 +166,25 @@ export function WhatsAppButton() {
 
   return (
     <>
-      {/* Floating Launcher Pill / Button */}
-      <div className="fixed bottom-20 md:bottom-8 right-5 z-40">
+      {/* Sleek Floating Action Button (Compact Amazon/Myntra Modest Design) */}
+      <div className="fixed bottom-20 md:bottom-8 right-5 z-40 group">
         <motion.button
           onClick={() => setIsOpen((prev) => !prev)}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="relative bg-[#25D366] hover:bg-[#20bd5a] text-white p-3 md:px-4 md:py-3 rounded-full shadow-2xl flex items-center gap-2.5 transition-all cursor-pointer border-2 border-white/20"
-          aria-label="Multi-Agent WhatsApp Support"
+          whileHover={{ scale: 1.08 }}
+          whileTap={{ scale: 0.94 }}
+          className="relative w-13 h-13 sm:w-14 sm:h-14 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-full shadow-xl flex items-center justify-center transition-all cursor-pointer border-2 border-white/30"
+          aria-label="Chat on WhatsApp"
         >
-          <div className="relative">
-            <MessageSquare className="w-5 h-5 md:w-6 md:h-6 fill-white" />
-            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-white rounded-full flex items-center justify-center">
-              <span className="w-2 h-2 bg-emerald-700 rounded-full animate-ping" />
-            </span>
-          </div>
-
-          <div className="hidden md:flex flex-col text-left leading-tight">
-            <span className="text-[11px] font-black uppercase tracking-wider text-black/80 flex items-center gap-1">
-              <Sparkles className="w-3 h-3 text-amber-200" />
-              Multi-Agent Live Support
-            </span>
-            <span className="text-xs font-bold text-white">Chat with Store Specialists</span>
-          </div>
-
-          <span className="bg-black/20 text-white text-[10px] font-black px-2 py-0.5 rounded-full ml-1">
-            4 Online
+          <MessageSquare className="w-6 h-6 fill-white" />
+          <span className="absolute top-0 right-0 w-3.5 h-3.5 bg-white rounded-full flex items-center justify-center shadow-sm">
+            <span className="w-2.5 h-2.5 bg-emerald-600 rounded-full animate-pulse" />
           </span>
         </motion.button>
+
+        {/* Hover Tooltip (Desktop) */}
+        <div className="hidden md:block absolute right-16 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap bg-stone-900 text-white text-[11px] font-semibold px-3 py-1.5 rounded-lg shadow-lg border border-stone-800">
+          Chat on WhatsApp
+        </div>
       </div>
 
       {/* Multi-Agent Concierge Modal Drawer */}

@@ -1,6 +1,23 @@
 import { INITIAL_PRODUCTS, Product } from '@/data/catalog';
 import { formatINR } from '@/lib/utils';
 
+export interface AuthenticatedCustomer {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  orders?: Array<{
+    id: string;
+    orderNumber: string;
+    date: string;
+    items: Array<{ name: string; price: number; quantity: number }>;
+    total: number;
+    status: string;
+    trackingId?: string;
+    courierPartner?: string;
+  }>;
+}
+
 export interface RAGResponse {
   answer: string;
   sourceContexts: string[];
@@ -18,91 +35,147 @@ export interface RAGResponse {
   }>;
 }
 
-const STORE_KNOWLEDGE_BASE = [
+const PUBLIC_STORE_SERVICES = [
   {
-    topic: 'Store Location & Hours',
-    text: "Mi King's DSLR Camera Shop flagship showroom is located at Pillar No. 103, Bank Colony, Near Tadbun, Mir Alam Tank, Bahadurpura, Hyderabad, Telangana 500064. Store is open Monday through Sunday from 11:00 AM to 10:00 PM.",
+    topic: 'Store Location & Timings',
+    keywords: ['location', 'address', 'visit', 'timing', 'hours', 'open', 'hyderabad', 'where', 'direction'],
+    text: "Mi King's DSLR Camera Shop flagship showroom is located at Pillar No. 103, Bank Colony, Near Tadbun, Mir Alam Tank, Bahadurpura, Hyderabad, Telangana 500064.\n\nStore timings: Monday to Sunday from 11:00 AM to 10:00 PM.",
   },
   {
-    topic: 'Store Contact & Hotlines',
-    text: "Founder & Owner Mohd Idrees can be reached at +91 90322 85420. Secondary store customer hotline is +91 63058 75376. Email: mikingsdslrshop@gmail.com. We also offer direct WhatsApp consultation for quick equipment reservations.",
-  },
-  {
-    topic: '1-Year Store Warranty Policy',
-    text: "Every certified pre-owned and new camera body, cinema lens, and studio equipment sold by Mi King's Cameras includes a written 1-Year Store Warranty. This covers optical sensors, mechanical shutter assemblies, motherboard electronics, and autofocus motors. Liquid damage and accidental physical drops are excluded.",
+    topic: '1-Year Store Warranty',
+    keywords: ['warranty', 'guarantee', 'repair', 'protection'],
+    text: "Every certified pre-owned and new camera body, lens, and equipment sold by Mi King's Cameras includes a comprehensive 1-Year Store Warranty. This covers optical sensors, shutter mechanisms, electronic motherboards, and autofocus motors. Liquid damage and accidental physical drops are excluded.",
   },
   {
     topic: '25-Point Inspection Protocol',
-    text: "All pre-owned cameras undergo rigorous 25-point testing including: hot pixel sensor scans, shutter actuation count verification, optical element fungus & haze inspection, stabilization testing, and clean battery health checks.",
+    keywords: ['inspection', 'testing', 'quality', 'check', 'certified', 'condition'],
+    text: "All pre-owned cameras undergo rigorous 25-point testing including: hot pixel sensor scans, shutter actuation count verification, optical element fungus & haze inspection, image stabilization testing, and clean battery health checks.",
   },
   {
-    topic: 'Return & Exchange Policy',
+    topic: '30-Day Return & Exchange Policy',
+    keywords: ['return', 'exchange', 'replace', 'refund'],
     text: "We offer a 30-Day Store Exchange Policy on all camera gear. If an item develops a technical defect, we provide replacement or in-store exchange within 30 days of purchase.",
   },
   {
-    topic: 'Shipping & Delivery',
-    text: "Free insured shipping is provided on all orders above ₹5,000 across India via Delhivery Surface and BlueDart Air. Hyderabad local orders can also be collected in-person from our Mir Alam Tank store or dispatched via local 2-hour express courier.",
+    topic: 'Shipping & Delivery Services',
+    keywords: ['shipping', 'delivery', 'courier', 'dispatch', 'delhivery', 'bluedart'],
+    text: "Free insured shipping is provided on all orders above ₹5,000 across India via Delhivery Surface and BlueDart Air. In Hyderabad, customers can collect gear in person from our Mir Alam Tank showroom or request local same-day express delivery.",
   },
   {
-    topic: 'GST & Invoicing',
-    text: "All purchases come with an official 18% GST Tax Invoice (HSN 9006 for Cameras, HSN 9002 for Lenses) with GSTIN 36AAACM1920K1ZX. Customers can download their computer-generated invoice directly from their account.",
+    topic: '18% GST Tax Invoicing',
+    keywords: ['gst', 'invoice', 'tax', 'bill', 'business'],
+    text: "All purchases include an official 18% GST Tax Invoice (HSN 9006 for Cameras, HSN 9002 for Lenses) with valid GSTIN. Businesses and professionals can claim full GST input tax credits.",
+  },
+  {
+    topic: 'Direct WhatsApp Equipment Consultation',
+    keywords: ['contact', 'phone', 'whatsapp', 'call', 'talk', 'specialist', 'idrees'],
+    text: "You can consult directly with Founder Mohd Idrees on WhatsApp for personalized gear advice, equipment reservations, or trade-in inquiries at +91 90322 85420 or +91 63058 75376.",
   },
 ];
 
-// Sample order index for lookup
-const ORDERS_KNOWLEDGE_BASE: Record<string, any> = {
-  'MIK-982104': {
-    orderNumber: 'MIK-982104',
-    status: 'Delivered',
-    date: '28 Oct 2026',
-    items: 'Canon EOS 80D DSLR Kit + EF-S 18-135mm IS USM',
-    total: 48999,
-    trackingAwb: 'DTDC-HYD-998241',
-    courier: 'DTDC Priority Express',
-    destination: 'Hyderabad, Telangana',
-  },
-  'MIK-982105': {
-    orderNumber: 'MIK-982105',
-    status: 'In Transit (Out for Delivery)',
-    date: '03 Nov 2026',
-    items: 'Sony FE 50mm f/1.8 Prime Lens',
-    total: 16999,
-    trackingAwb: 'BLUEDART-882194',
-    courier: 'BlueDart Air Cargo',
-    destination: 'Hyderabad, Telangana',
-  },
-};
+/**
+ * Clean plain-text formatting helper: removes raw markdown asterisks and cleans up text
+ */
+function cleanFormatting(str: string): string {
+  return str.replace(/\*\*/g, '').trim();
+}
 
 /**
- * Core RAG Retrieval & Answer Engine
+ * Core RAG Retrieval & Answer Engine with Strict Privacy Boundaries
  */
-export async function queryRAGAssistant(userPrompt: string): Promise<RAGResponse> {
+export async function queryRAGAssistant(
+  userPrompt: string,
+  user?: AuthenticatedCustomer | null
+): Promise<RAGResponse> {
   const query = userPrompt.toLowerCase().trim();
 
-  // 1. Order Number Retrieval Check (RAG Order Retrieval)
-  const orderRegex = /(mik[- ]?\d{4,8}|\b\d{6}\b)/i;
-  const orderMatch = query.match(orderRegex);
+  // -------------------------------------------------------------
+  // PRIVACY BOUNDARY: Check for order / customer private data query
+  // -------------------------------------------------------------
+  const isOrderQuery =
+    query.includes('order') ||
+    query.includes('track') ||
+    query.includes('consignment') ||
+    query.includes('awb') ||
+    query.includes('invoice') ||
+    /(mik[- ]?\d{4,8}|\b\d{6}\b)/i.test(query);
 
-  if (orderMatch) {
-    const rawNumber = orderMatch[1].replace(/[- ]/g, '').toUpperCase();
-    const cleanOrderNumber = rawNumber.startsWith('MIK') ? `MIK-${rawNumber.slice(3)}` : `MIK-${rawNumber}`;
-
-    const order = ORDERS_KNOWLEDGE_BASE[cleanOrderNumber] || ORDERS_KNOWLEDGE_BASE['MIK-982104'];
-
-    if (order) {
+  if (isOrderQuery) {
+    // If user is NOT logged in: strictly refuse and guide to secure login portal
+    if (!user || !user.id) {
       return {
-        answer: `📦 **Order Status Found for ${order.orderNumber}**\n\n• **Current Status:** **${order.status}**\n• **Consignment Items:** ${order.items}\n• **Total Amount:** ${formatINR(order.total)}\n• **Courier Partner:** ${order.courier}\n• **Tracking AWB:** \`${order.trackingAwb}\`\n• **Destination:** ${order.destination}\n\nYour equipment is protected under our **1-Year Store Warranty**. You can download your official GST Tax Invoice from your account.`,
-        sourceContexts: [`Orders Database: ${order.orderNumber}`],
+        answer:
+          "For customer privacy and account security, order tracking details, consignment status, and invoices are strictly protected. To view your orders, please sign in to your verified customer account, or use our secure Track Order portal.",
+        sourceContexts: ['Privacy Protection Protocol'],
         suggestedAction: {
           type: 'order',
-          label: `Track Consignment ${order.orderNumber}`,
-          href: `/track?orderId=${order.orderNumber}`,
+          label: 'Sign In to View Orders',
+          href: '/account',
+        },
+      };
+    }
+
+    // User IS logged in: search ONLY user's own orders
+    const userOrders = user.orders || [];
+    const orderRegex = /(mik[- ]?\d{4,8}|\b\d{6}\b)/i;
+    const match = query.match(orderRegex);
+
+    if (match) {
+      const cleanNum = match[1].replace(/[- ]/g, '').toUpperCase();
+      const matchedOrder = userOrders.find((o) =>
+        o.orderNumber.replace(/[- ]/g, '').toUpperCase().includes(cleanNum)
+      );
+
+      if (matchedOrder) {
+        const itemsList = matchedOrder.items.map((i) => `${i.name} (Qty: ${i.quantity})`).join(', ');
+        return {
+          answer: `Here is the status for your order ${matchedOrder.orderNumber}:\n\nStatus: ${matchedOrder.status}\nDate: ${matchedOrder.date}\nEquipment: ${itemsList}\nTotal: ${formatINR(matchedOrder.total)}\nCourier: ${matchedOrder.courierPartner || 'Delhivery Express'}\nTracking ID: ${matchedOrder.trackingId || 'Generated upon dispatch'}`,
+          sourceContexts: [`Customer Account Orders (${user.email})`],
+          suggestedAction: {
+            type: 'order',
+            label: `Track ${matchedOrder.orderNumber}`,
+            href: `/track?orderId=${matchedOrder.orderNumber}`,
+          },
+        };
+      } else {
+        return {
+          answer: `We could not find an order matching that reference under your signed-in account (${user.email}). Please verify the order number in your account order history.`,
+          sourceContexts: ['Customer Account'],
+          suggestedAction: {
+            type: 'link',
+            label: 'View Order History',
+            href: '/account',
+          },
+        };
+      }
+    } else if (userOrders.length > 0) {
+      const latestOrder = userOrders[0];
+      const itemsList = latestOrder.items.map((i) => `${i.name}`).join(', ');
+      return {
+        answer: `Hello ${user.name}! Your most recent order ${latestOrder.orderNumber} is currently ${latestOrder.status}.\n\nItems: ${itemsList}\nTotal: ${formatINR(latestOrder.total)}\nDate: ${latestOrder.date}`,
+        sourceContexts: [`Customer Account: ${user.email}`],
+        suggestedAction: {
+          type: 'order',
+          label: `Track Order ${latestOrder.orderNumber}`,
+          href: `/track?orderId=${latestOrder.orderNumber}`,
+        },
+      };
+    } else {
+      return {
+        answer: `Hello ${user.name}! You do not currently have any active orders under your account (${user.email}). Feel free to explore our camera and lens collection.`,
+        sourceContexts: ['Customer Account'],
+        suggestedAction: {
+          type: 'link',
+          label: 'Explore Catalog',
+          href: '/catalog',
         },
       };
     }
   }
 
-  // 2. Product Catalog Retrieval Check
+  // -------------------------------------------------------------
+  // PUBLIC INFORMATION 1: Product Catalog & Equipment Inventory
+  // -------------------------------------------------------------
   const matchingProducts = INITIAL_PRODUCTS.filter((p) => {
     return (
       query.includes(p.brand.toLowerCase()) ||
@@ -114,18 +187,18 @@ export async function queryRAGAssistant(userPrompt: string): Promise<RAGResponse
     );
   }).slice(0, 3);
 
-  if (matchingProducts.length > 0 && !query.includes('warranty') && !query.includes('where is')) {
+  if (matchingProducts.length > 0 && !query.includes('warranty') && !query.includes('location')) {
     const productListText = matchingProducts
       .map(
         (p) =>
-          `• **${p.name}**\n  Price: **${formatINR(p.salePrice)}** (${p.condition}) — ${
-            p.inStock ? '✅ In Stock at Hyderabad Hub' : '⏳ Available for Pre-Order'
+          `• ${p.name}\n  Price: ${formatINR(p.salePrice)} (${p.condition}) — ${
+            p.inStock ? 'In Stock at Hyderabad Showroom' : 'Available on Order'
           }`
       )
       .join('\n\n');
 
     return {
-      answer: `Here are the top equipment matches from our live Hyderabad catalog:\n\n${productListText}\n\nEvery camera and lens is tested with our **25-point inspection protocol** and includes an authentic **1-Year Store Warranty**.`,
+      answer: `Here are available equipment matches from our Hyderabad catalog:\n\n${productListText}\n\nAll items include our 1-Year Store Warranty and 25-point inspection certificate.`,
       sourceContexts: matchingProducts.map((p) => `Catalog: ${p.name}`),
       matchedProducts: matchingProducts.map((p) => ({
         id: p.id,
@@ -142,44 +215,35 @@ export async function queryRAGAssistant(userPrompt: string): Promise<RAGResponse
     };
   }
 
-  // 3. Store Knowledge Retrieval (Warranty, Location, Inspection, Contact)
-  const matchedDocs = STORE_KNOWLEDGE_BASE.filter((doc) => {
-    const text = doc.text.toLowerCase();
-    const topic = doc.topic.toLowerCase();
-    return (
-      query.split(' ').some((word) => word.length > 3 && (text.includes(word) || topic.includes(word))) ||
-      (query.includes('warranty') && topic.includes('warranty')) ||
-      (query.includes('location') && topic.includes('location')) ||
-      (query.includes('address') && topic.includes('location')) ||
-      (query.includes('phone') && topic.includes('contact')) ||
-      (query.includes('timing') && topic.includes('hours')) ||
-      (query.includes('return') && topic.includes('return')) ||
-      (query.includes('invoice') && topic.includes('invoicing')) ||
-      (query.includes('gst') && topic.includes('invoicing'))
-    );
-  });
+  // -------------------------------------------------------------
+  // PUBLIC INFORMATION 2: Store Services & Policies
+  // -------------------------------------------------------------
+  const matchedService = PUBLIC_STORE_SERVICES.find((service) =>
+    service.keywords.some((kw) => query.includes(kw))
+  );
 
-  if (matchedDocs.length > 0) {
-    const combinedAnswer = matchedDocs.map((d) => d.text).join('\n\n');
+  if (matchedService) {
     return {
-      answer: combinedAnswer,
-      sourceContexts: matchedDocs.map((d) => d.topic),
+      answer: cleanFormatting(matchedService.text),
+      sourceContexts: [matchedService.topic],
       suggestedAction: {
         type: 'whatsapp',
-        label: 'Chat with Mohd Idrees on WhatsApp',
+        label: 'Chat with Specialist on WhatsApp',
         href: 'https://wa.me/919032285420',
       },
     };
   }
 
-  // Fallback intelligent greeting & guide
+  // -------------------------------------------------------------
+  // DEFAULT CLEAN GREETING (Public info only, no asterisks, no private order IDs)
+  // -------------------------------------------------------------
+  const greeting = user && user.name ? `Hello ${user.name}!` : "Hello! Welcome to Mi King's Cameras.";
   return {
-    answer:
-      "Hello! I am **Mi King's AI Concierge**, trained on our complete live catalog and store database in Hyderabad.\n\nI can assist you with:\n• **Order & Tracking Lookups:** Mention your order ID (e.g. `MIK-982104`).\n• **Camera & Lens Recommendations:** Ask about Canon, Sony, Nikon, DJI, or budget options.\n• **Store Policies:** Inquire about our 1-Year Store Warranty, 25-point inspection, or 30-day exchange.\n• **Hyderabad Store Visit:** Directions to Pillar 103, Bank Colony, Mir Alam Tank.",
-    sourceContexts: ['Mi King Store Guide'],
+    answer: `${greeting}\n\nI can assist you with:\n• Products: Browse DSLR cameras, mirrorless bodies, cinema lenses, and drones.\n• Store Services: 1-Year Store Warranty, 25-point inspection, and 30-day exchange.\n• Showroom Visit: Showroom address at Pillar 103, Bank Colony, Mir Alam Tank, Hyderabad and store hours (11:00 AM – 10:00 PM).`,
+    sourceContexts: ['Public Store Directory'],
     suggestedAction: {
       type: 'link',
-      label: 'Browse Complete Catalog',
+      label: 'Explore Catalog',
       href: '/catalog',
     },
   };
