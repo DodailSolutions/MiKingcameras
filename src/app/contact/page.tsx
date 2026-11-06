@@ -111,7 +111,7 @@ export default function ContactPage() {
                 <div>
                   <span className="font-bold text-stone-900 dark:text-white block">Showroom Timings</span>
                   <p className="text-stone-500 dark:text-stone-400 mt-0.5">
-                    Monday to Sunday: 10:00 AM &ndash; 9:30 PM (Open 7 Days)
+                    Monday to Saturday: 10:30 AM &ndash; 9:00 PM &middot; Sunday: 11:00 AM &ndash; 8:00 PM
                   </p>
                 </div>
               </div>

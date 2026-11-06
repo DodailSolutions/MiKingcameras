@@ -84,7 +84,7 @@ const AGENTS: Agent[] = [
     department: 'billing',
     phone: '916305875376',
     displayPhone: '+91 63058 75376',
-    status: 'Open (10 AM - 9:30 PM)',
+    status: 'Open 7 Days',
     replyTime: 'Instant',
     avatarBg: 'bg-gradient-to-tr from-violet-600 to-purple-500',
     icon: FileText,
