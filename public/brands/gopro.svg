@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 36" fill="none">
+  <!-- Official GoPro Action Camera Logo -->
+  <text x="2" y="27" font-family="'Arial Black', Arial, sans-serif" font-weight="900" font-size="28" letter-spacing="-0.5" fill="#000000">GoPro</text>
+  <rect x="94" y="10" width="10" height="10" fill="#00A2DF" rx="1.5"/>
+  <rect x="108" y="10" width="10" height="10" fill="#00A2DF" rx="1.5"/>
+  <rect x="122" y="10" width="10" height="10" fill="#00A2DF" rx="1.5"/>
+</svg>

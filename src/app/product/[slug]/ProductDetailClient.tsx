@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Product } from '@/data/catalog';
+import { CustomerReviewsSection } from '@/components/reviews/CustomerReviewsSection';
 import { formatINR } from '@/lib/utils';
 import { useCart } from '@/context/CartContext';
 import {
@@ -26,6 +27,7 @@ import {
   Home,
   Check,
   Share2,
+  ArrowRight,
 } from 'lucide-react';
 
 export function ProductDetailClient({ product }: { product: Product }) {
@@ -45,10 +47,19 @@ export function ProductDetailClient({ product }: { product: Product }) {
     setActiveImgSrc(images[selectedImgIndex] || product.imageUrl);
   }, [selectedImgIndex, images, product.imageUrl]);
 
+  const CATEGORY_FALLBACK_IMAGES: Record<string, string> = {
+    lenses: 'https://images.unsplash.com/photo-1617005082133-548c4dd27f35?auto=format&fit=crop&w=800&q=80',
+    dslr: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80',
+    mirrorless: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80',
+    drones: 'https://images.unsplash.com/photo-1527977966376-1c8408f9f108?auto=format&fit=crop&w=800&q=80',
+  };
+
   const handleImageError = () => {
-    if (activeImgSrc !== product.imageUrl) {
-      setActiveImgSrc(product.imageUrl);
-      setSelectedImgIndex(0);
+    if (selectedImgIndex + 1 < images.length) {
+      setSelectedImgIndex((prev) => prev + 1);
+    } else {
+      const fallback = CATEGORY_FALLBACK_IMAGES[product.category] || CATEGORY_FALLBACK_IMAGES.dslr;
+      setActiveImgSrc(fallback);
     }
   };
 
@@ -82,14 +93,14 @@ export function ProductDetailClient({ product }: { product: Product }) {
         {/* Left Column: Visual Showcase & Multi-Image Gallery */}
         <div className="lg:col-span-7 space-y-4">
           {/* Main Large Image */}
-          <div className="relative aspect-4/3 rounded-3xl overflow-hidden bg-white dark:bg-white border border-stone-200 dark:border-stone-800 shadow-sm flex items-center justify-center p-6">
+          <div className="relative aspect-4/3 rounded-3xl overflow-hidden bg-transparent border border-stone-200/60 dark:border-[#2a2621] shadow-sm flex items-center justify-center p-6">
             <Image
               src={activeImgSrc}
               alt={`${product.name} - Angle ${selectedImgIndex + 1}`}
               fill
               priority
               onError={handleImageError}
-              className="object-contain p-6 mix-blend-multiply contrast-[1.32] brightness-[1.20] saturate-[1.08] [mask-image:radial-gradient(ellipse_at_center,black_74%,transparent_100%)] transition-all duration-300"
+              className="object-contain p-6 transition-all duration-300 drop-shadow-md"
               sizes="(max-width: 1024px) 100vw, 60vw"
             />
             {product.badge && (
@@ -132,7 +143,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
                   key={idx}
                   type="button"
                   onClick={() => setSelectedImgIndex(idx)}
-                  className={`relative w-20 h-20 rounded-2xl overflow-hidden bg-white dark:bg-white p-1 shrink-0 transition-all duration-200 cursor-pointer ${
+                  className={`relative w-20 h-20 rounded-2xl overflow-hidden bg-transparent p-1 shrink-0 transition-all duration-200 cursor-pointer ${
                     selectedImgIndex === idx
                       ? 'ring-3 ring-[#F5821F] shadow-lg shadow-[#F5821F]/25 scale-105'
                       : 'border-2 border-stone-200 dark:border-stone-700 opacity-70 hover:opacity-100 hover:border-stone-400'
@@ -142,7 +153,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
                     src={img}
                     alt={`Thumbnail ${idx + 1}`}
                     fill
-                    className="object-contain p-1 mix-blend-multiply contrast-[1.32] brightness-[1.20] saturate-[1.08] [mask-image:radial-gradient(ellipse_at_center,black_74%,transparent_100%)]"
+                    className="object-contain p-1"
                     sizes="80px"
                   />
                 </button>
@@ -215,12 +226,12 @@ export function ProductDetailClient({ product }: { product: Product }) {
 
             <div className="text-xs text-stone-600 dark:text-stone-400 space-y-2 border-t border-stone-100 dark:border-[#2a2621] pt-3">
               <div className="flex justify-between">
-                <span>Inclusive of all taxes:</span>
-                <span className="text-stone-900 dark:text-white font-bold">18% GST Included with Invoice</span>
+                <span>Official Store Bill:</span>
+                <span className="text-stone-900 dark:text-white font-bold">Retail Bill &amp; 2-Year Warranty (No GST)</span>
               </div>
               <div className="flex justify-between">
                 <span>Warranty Coverage:</span>
-                <span className="text-stone-900 dark:text-white font-bold">{product.warranty}</span>
+                <span className="text-stone-900 dark:text-white font-bold">2 Years Comprehensive Store Warranty</span>
               </div>
               <div className="flex justify-between">
                 <span>Availability:</span>
@@ -235,6 +246,32 @@ export function ProductDetailClient({ product }: { product: Product }) {
                 )}
               </div>
             </div>
+          </div>
+
+          {/* Live Video Call Verification Advisory Clause */}
+          <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-[#F5821F]/10 to-emerald-500/10 border-2 border-[#F5821F]/30 space-y-2.5">
+            <div className="flex items-center gap-2">
+              <span className="px-2 py-0.5 rounded-md bg-[#F5821F] text-black font-black text-[10px] uppercase tracking-wider">
+                Recommended
+              </span>
+              <span className="font-bold text-xs text-stone-900 dark:text-white">
+                Inspect on WhatsApp Video Call Before Buying!
+              </span>
+            </div>
+            <p className="text-[11px] text-stone-600 dark:text-stone-400 leading-relaxed">
+              Don&apos;t buy directly without seeing. For high-value cameras and lenses, call us on WhatsApp Video Call (+91 63058 75376 / +91 90322 85420) to inspect the body condition, lens optical clarity, sensor, and shutter count live with showroom experts. Verify first, then pay directly to the store!
+            </p>
+            <a
+              href={`https://wa.me/916305875376?text=${encodeURIComponent(
+                `Hi Mi King's Cameras! I want to request a WhatsApp Video Call to inspect this camera before buying: ${product.name} (SKU: ${product.id}).`
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-black font-extrabold text-xs transition-all shadow-sm"
+            >
+              <MessageCircle className="w-4 h-4" />
+              <span>Request WhatsApp Video Call Inspection</span>
+            </a>
           </div>
 
           {/* Action CTAs */}
@@ -319,77 +356,8 @@ export function ProductDetailClient({ product }: { product: Product }) {
         </div>
       </div>
 
-      {/* Customer Reviews & Ratings Break-down Section */}
-      <section className="bg-white dark:bg-[#181613] border border-stone-200 dark:border-[#2a2621] rounded-3xl p-6 sm:p-10 shadow-sm space-y-6 transition-colors">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-stone-100 dark:border-[#2a2621] pb-6">
-          <div>
-            <h2 className="text-xl font-black text-stone-900 dark:text-white">
-              Customer Reviews &amp; Ratings
-            </h2>
-            <p className="text-xs text-stone-500 mt-0.5">
-              Verified feedback from Hyderabad buyers and photographers across India.
-            </p>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="text-3xl font-black text-stone-900 dark:text-white">{product.rating}</div>
-            <div>
-              <div className="flex text-amber-400">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 fill-amber-400" />
-                ))}
-              </div>
-              <span className="text-[11px] text-stone-500">Based on {product.reviewCount} ratings</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Individual Reviews */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="p-4 rounded-2xl bg-stone-50 dark:bg-[#201d19] border border-stone-200/80 dark:border-[#2e2a25] space-y-2">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-full bg-[#F5821F] text-black font-black flex items-center justify-center text-xs">
-                  AK
-                </div>
-                <div>
-                  <h4 className="text-xs font-bold text-stone-900 dark:text-white">Arun Kumar</h4>
-                  <span className="text-[10px] text-stone-500">Hyderabad (Verified Buyer)</span>
-                </div>
-              </div>
-              <div className="flex text-amber-400">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-3 h-3 fill-amber-400" />
-                ))}
-              </div>
-            </div>
-            <p className="text-xs text-stone-700 dark:text-stone-300 leading-relaxed italic">
-              &ldquo;Tested the camera in-person at the Bahadurpura store. Sensor is spotless, shutter count matches the description, and got genuine invoice with warranty.&rdquo;
-            </p>
-          </div>
-
-          <div className="p-4 rounded-2xl bg-stone-50 dark:bg-[#201d19] border border-stone-200/80 dark:border-[#2e2a25] space-y-2">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-full bg-stone-300 dark:bg-stone-700 text-stone-900 dark:text-white font-black flex items-center justify-center text-xs">
-                  MS
-                </div>
-                <div>
-                  <h4 className="text-xs font-bold text-stone-900 dark:text-white">Mohd Salman</h4>
-                  <span className="text-[10px] text-stone-500">Bangalore (Shipped Order)</span>
-                </div>
-              </div>
-              <div className="flex text-amber-400">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-3 h-3 fill-amber-400" />
-                ))}
-              </div>
-            </div>
-            <p className="text-xs text-stone-700 dark:text-stone-300 leading-relaxed italic">
-              &ldquo;Delivery was fast and packed in shock-proof bubble wrapping. Product looks practically brand new. Excellent service from Mi King&apos;s team!&rdquo;
-            </p>
-          </div>
-        </div>
-      </section>
+      {/* Customer Reviews & Ratings Break-down Section with Photo Uploads & Verified Badges */}
+      <CustomerReviewsSection product={product} />
 
       {/* Native App-Style Mobile Bottom Purchase Dock */}
       <div className="md:hidden fixed bottom-14 left-0 right-0 z-30 bg-white/95 dark:bg-[#110f0d]/95 backdrop-blur-xl border-t border-stone-200 dark:border-[#2e2a25] px-4 py-2.5 shadow-2xl flex items-center justify-between gap-3">

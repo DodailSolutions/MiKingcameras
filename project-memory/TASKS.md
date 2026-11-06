@@ -112,8 +112,8 @@
 | P4-020 | Guest checkout | Checkout | P1 | 🔲 | P4-019 | — | 🔲 |
 | P4-021 | Product comparison | Products | P2 | 🔲 | P4-007 | — | — |
 | P4-022 | Recently viewed | Products | P2 | 🔲 | P4-007 | — | — |
-| P4-023 | Reviews API | Reviews | P1 | 🔲 | P3-003 | — | 🔲 |
-| P4-024 | Reviews UI | Reviews | P1 | 🔲 | P4-023 | — | — |
+| P4-023 | Reviews API & Storage | Reviews | P1 | ✅ | P3-003 | Nov 6, 2026 | ✅ |
+| P4-024 | Reviews UI & Photo Uploads | Reviews | P1 | ✅ | P4-023 | Nov 6, 2026 | ✅ |
 
 ---
 

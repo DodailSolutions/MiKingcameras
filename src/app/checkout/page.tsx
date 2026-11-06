@@ -328,8 +328,8 @@ export default function CheckoutPage() {
           <div className="divide-y divide-stone-100 dark:divide-[#2e2a25] max-h-72 overflow-y-auto pr-1">
             {cart.map(({ product, quantity }) => (
               <div key={product.id} className="py-3 flex gap-3 items-center">
-                <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-white dark:bg-black shrink-0 border border-stone-200 dark:border-[#2e2a25]">
-                  <Image src={product.imageUrl} alt={product.name} fill className="object-cover" />
+                <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-transparent shrink-0 border border-stone-200/80 dark:border-[#2e2a25] flex items-center justify-center p-0.5">
+                  <Image src={product.imageUrl} alt={product.name} fill className="object-contain" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h4 className="text-xs font-semibold text-stone-900 dark:text-white truncate">{product.name}</h4>

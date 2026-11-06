@@ -72,8 +72,8 @@ export default function HomePage() {
                 <Award className="w-4 h-4" />
               </div>
               <div className="text-left">
-                <span className="text-xs font-bold text-stone-900 dark:text-white block leading-tight">Brand Warranty</span>
-                <span className="text-[10px] text-stone-500 dark:text-stone-400">1 to 2 Years Protection</span>
+                <span className="text-xs font-bold text-stone-900 dark:text-white block leading-tight">Store Warranty</span>
+                <span className="text-[10px] text-stone-500 dark:text-stone-400">2 Years Store Warranty</span>
               </div>
             </div>
             <div className="h-6 w-px bg-stone-200 dark:bg-stone-800 shrink-0" />
@@ -230,27 +230,34 @@ export default function HomePage() {
         startDelay={5400}
       />
 
-      {/* 8. Creative Journey Narrative Banner */}
+      {/* 8. Authentic Family Legacy & Leadership Story (Copied from About Us) */}
       <section className="max-w-7xl mx-auto px-4">
-        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-stone-900 via-[#181613] to-black border border-stone-800 p-8 sm:p-12 shadow-xl">
+        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-stone-900 via-[#181613] to-black border border-stone-800 p-8 sm:p-12 shadow-xl space-y-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-8 space-y-4">
-              <span className="text-xs font-bold text-stone-400 uppercase tracking-widest">More Than a Store.</span>
-              <h2 className="text-2xl sm:text-4xl font-black text-white">
-                A Partner in Your <span className="text-[#F5821F]">Creative Journey</span>.
+              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F5821F]/20 text-[#F5821F] text-xs font-bold tracking-wider uppercase border border-[#F5821F]/30">
+                <Camera className="w-3.5 h-3.5" />
+                Our Story &amp; Heritage
+              </span>
+              <h2 className="text-2xl sm:text-4xl font-black text-white leading-tight">
+                Built on Father&apos;s Blessings. <br />
+                <span className="text-[#F5821F]">Driven by Three Brothers.</span>
               </h2>
+              <p className="text-xs sm:text-sm text-stone-300 leading-relaxed max-w-2xl">
+                MI KINGS ENTERPRISES is a family-owned photography haven in Hyderabad. Founded by Mohd Idrees and steered by his three sons — Mohd Waseem, Mohd Allauddin, and Mohd Jafar — on the timeless values of honesty, hard work, and putting the customer first. Every camera is tested with 25-point verification and protected with our 2-Year Store Warranty.
+              </p>
               <div className="space-y-2 pt-2 text-xs sm:text-sm text-stone-300">
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#F5821F]" />
-                  <span>Wide Range of Top Brands with Full Warranty Coverage</span>
+                  <span>Honesty First — Zero hidden flaws or inflated shutter counts</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#F5821F]" />
-                  <span>Expert Guidance &amp; After-Sales Support from Hyderabad Hub</span>
+                  <span>2-Year Comprehensive Store Warranty &amp; 25-Point Verification</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#F5821F]" />
-                  <span>Best Prices &amp; Exclusive Deals for Content Creators</span>
+                  <span>Expert Consultation from Mohd Allauddin (MBA &amp; Photography Expert)</span>
                 </div>
               </div>
             </div>
@@ -261,7 +268,7 @@ export default function HomePage() {
                 className="px-6 py-3.5 rounded-xl bg-[#F5821F] hover:bg-[#E0741A] text-black font-extrabold text-sm inline-flex items-center justify-center gap-2 transition-colors shadow-md"
               >
                 <MapPin className="w-4 h-4" />
-                Visit Our Hyderabad Store
+                Read Full Story &amp; Leadership
               </Link>
               <a
                 href="https://wa.me/916305875376"
@@ -272,6 +279,46 @@ export default function HomePage() {
                 <MessageCircle className="w-4 h-4 text-[#25D366]" />
                 Ask an Expert on WhatsApp
               </a>
+            </div>
+          </div>
+
+          {/* Leadership Quick Preview Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-stone-800/80">
+            <div className="flex items-center gap-3">
+              <div className="relative w-12 h-12 rounded-xl overflow-hidden border border-stone-700 shrink-0">
+                <Image src="/about/father_mohd_idrees.jpg" alt="Mohd Idrees" fill className="object-cover" />
+              </div>
+              <div>
+                <h4 className="text-xs font-bold text-white">Mohd Idrees</h4>
+                <p className="text-[10px] text-stone-400">Pillar &amp; Guiding Force</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="relative w-12 h-12 rounded-xl overflow-hidden border border-stone-700 shrink-0">
+                <Image src="/about/mohd_waseem.png" alt="Mohd Waseem" fill className="object-cover" />
+              </div>
+              <div>
+                <h4 className="text-xs font-bold text-white">Mohd Waseem</h4>
+                <p className="text-[10px] text-stone-400">Founder &amp; Strategy</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="relative w-12 h-12 rounded-xl overflow-hidden border border-stone-700 shrink-0">
+                <Image src="/about/mohd_allauddin.png" alt="Mohd Allauddin" fill className="object-cover" />
+              </div>
+              <div>
+                <h4 className="text-xs font-bold text-white">Mohd Allauddin</h4>
+                <p className="text-[10px] text-stone-400">Photography Expert (MBA)</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="relative w-12 h-12 rounded-xl overflow-hidden border border-stone-700 shrink-0">
+                <Image src="/about/mohd_jafar.png" alt="Mohd Jafar" fill className="object-cover" />
+              </div>
+              <div>
+                <h4 className="text-xs font-bold text-white">Mohd Jafar</h4>
+                <p className="text-[10px] text-stone-400">Operations Head</p>
+              </div>
             </div>
           </div>
         </div>

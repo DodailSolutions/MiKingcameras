@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { Suspense, useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   BookOpen,
   FileText,
@@ -21,6 +22,10 @@ import {
   Image as ImageIcon,
   Save,
   X,
+  Globe,
+  EyeOff,
+  Star,
+  SearchX,
 } from 'lucide-react';
 import { BlogPost, INITIAL_BLOG_POSTS } from '@/data/blog';
 import { CustomPage, INITIAL_CUSTOM_PAGES } from '@/data/pages';
@@ -36,8 +41,15 @@ const SAMPLE_COVERS = [
   { label: 'Drone Flight', url: 'https://images.unsplash.com/photo-1527977966376-1c8408f9f108?auto=format&fit=crop&w=1200&q=80' },
 ];
 
-export default function AdminContentPage() {
-  const [activeTab, setActiveTab] = useState<'blogs' | 'pages'>('blogs');
+type StatusFilter = 'all' | 'published' | 'draft';
+
+function ContentWorkspace() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const activeTab: 'blogs' | 'pages' = searchParams.get('tab') === 'pages' ? 'pages' : 'blogs';
+  const setActiveTab = (tab: 'blogs' | 'pages') =>
+    router.replace(tab === 'pages' ? '/admin/content?tab=pages' : '/admin/content', { scroll: false });
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>(INITIAL_BLOG_POSTS);
   const [customPages, setCustomPages] = useState<CustomPage[]>(INITIAL_CUSTOM_PAGES);
   const [searchQuery, setSearchQuery] = useState('');
@@ -259,20 +271,57 @@ export default function AdminContentPage() {
     }
   };
 
+  // Quick publish / unpublish without opening the editor
+  const toggleBlogPublished = (id: string) => {
+    const updated = blogPosts.map((b) => (b.id === id ? { ...b, isPublished: !b.isPublished } : b));
+    setBlogPosts(updated);
+    localStorage.setItem(BLOG_STORAGE_KEY, JSON.stringify(updated));
+    const post = updated.find((b) => b.id === id);
+    showNotification(post?.isPublished ? `"${post.title}" is now live.` : `"${post?.title}" moved to drafts.`);
+  };
+
+  const togglePagePublished = (id: string) => {
+    const updated = customPages.map((p) => (p.id === id ? { ...p, isPublished: !p.isPublished } : p));
+    setCustomPages(updated);
+    localStorage.setItem(PAGES_STORAGE_KEY, JSON.stringify(updated));
+    const page = updated.find((p) => p.id === id);
+    showNotification(page?.isPublished ? `/${page.slug} is now live.` : `/${page?.slug} unpublished.`);
+  };
+
+  const matchesStatus = (isPublished: boolean) =>
+    statusFilter === 'all' || (statusFilter === 'published' ? isPublished : !isPublished);
+
   // Filtered lists
   const filteredBlogs = blogPosts.filter(
     (b) =>
-      b.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      b.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      b.author.toLowerCase().includes(searchQuery.toLowerCase())
+      matchesStatus(b.isPublished) &&
+      (b.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        b.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        b.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        b.tags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase())))
   );
 
   const filteredPages = customPages.filter(
     (p) =>
-      p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.slug.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.category.toLowerCase().includes(searchQuery.toLowerCase())
+      matchesStatus(p.isPublished) &&
+      (p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.slug.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.category.toLowerCase().includes(searchQuery.toLowerCase()))
   );
+
+  const activeItems = activeTab === 'blogs' ? blogPosts : customPages;
+  const statusCounts: Record<StatusFilter, number> = {
+    all: activeItems.length,
+    published: activeItems.filter((i) => i.isPublished).length,
+    draft: activeItems.filter((i) => !i.isPublished).length,
+  };
+  const contentStats = [
+    { label: 'Blog posts', value: blogPosts.length, icon: BookOpen, tone: 'text-[#F5821F] bg-[#F5821F]/15' },
+    { label: 'Live articles', value: blogPosts.filter((b) => b.isPublished).length, icon: Globe, tone: 'text-emerald-600 bg-emerald-500/15' },
+    { label: 'Drafts', value: blogPosts.filter((b) => !b.isPublished).length, icon: EyeOff, tone: 'text-stone-500 bg-stone-500/15' },
+    { label: 'Featured', value: blogPosts.filter((b) => b.featured).length, icon: Star, tone: 'text-amber-600 bg-amber-500/15' },
+    { label: 'Live pages', value: customPages.filter((p) => p.isPublished).length, icon: FileText, tone: 'text-[#2271b1] bg-[#2271b1]/15' },
+  ];
 
   return (
     <div className="space-y-6 max-w-6xl">
@@ -330,8 +379,23 @@ export default function AdminContentPage() {
         </div>
       )}
 
+      {/* Content stats */}
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+        {contentStats.map(({ label, value, icon: Icon, tone }) => (
+          <div key={label} className="bg-white dark:bg-[#151311] border border-stone-200 dark:border-[#24211d] rounded-xl p-3 flex items-center gap-3 shadow-sm">
+            <span className={`p-2 rounded-lg ${tone}`}>
+              <Icon className="w-4 h-4" />
+            </span>
+            <div>
+              <p className="text-lg font-black text-stone-900 dark:text-white leading-none">{value}</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-stone-500 mt-1">{label}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
       {/* Tabs and Search Bar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div className="flex flex-col xl:flex-row items-center justify-between gap-3">
         <div className="flex items-center bg-stone-200/80 dark:bg-[#1a1815] p-1 rounded-xl w-full sm:w-auto">
           <button
             onClick={() => setActiveTab('blogs')}
@@ -357,7 +421,25 @@ export default function AdminContentPage() {
           </button>
         </div>
 
-        <div className="relative w-full sm:w-72">
+        <div className="flex flex-col sm:flex-row items-center gap-2 w-full xl:w-auto">
+        <div className="flex items-center gap-1 w-full sm:w-auto" role="group" aria-label="Filter by status">
+          {(['all', 'published', 'draft'] as StatusFilter[]).map((f) => (
+            <button
+              key={f}
+              type="button"
+              onClick={() => setStatusFilter(f)}
+              aria-pressed={statusFilter === f}
+              className={`px-3 py-2 rounded-lg text-[11px] font-extrabold capitalize transition-colors cursor-pointer ${
+                statusFilter === f
+                  ? 'bg-[#2271b1] text-white'
+                  : 'text-stone-600 dark:text-stone-400 hover:bg-stone-200/70 dark:hover:bg-[#1f1c18]'
+              }`}
+            >
+              {f === 'draft' ? 'Drafts' : f} ({statusCounts[f]})
+            </button>
+          ))}
+        </div>
+        <div className="relative w-full sm:w-64">
           <Search className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-3" />
           <input
             type="text"
@@ -367,7 +449,25 @@ export default function AdminContentPage() {
             className="w-full bg-white dark:bg-[#151311] border border-stone-200 dark:border-[#24211d] rounded-xl pl-9 pr-3 py-2 text-xs text-stone-900 dark:text-stone-200 placeholder-stone-400 focus:outline-none focus:border-[#F5821F]"
           />
         </div>
+        </div>
       </div>
+
+      {((activeTab === 'blogs' && filteredBlogs.length === 0) || (activeTab === 'pages' && filteredPages.length === 0)) && (
+        <div className="bg-white dark:bg-[#151311] border border-dashed border-stone-300 dark:border-[#2a2622] rounded-2xl py-12 flex flex-col items-center gap-2 text-center">
+          <SearchX className="w-6 h-6 text-stone-400" />
+          <p className="text-sm font-bold text-stone-700 dark:text-stone-200">Nothing matches these filters</p>
+          <button
+            type="button"
+            onClick={() => {
+              setSearchQuery('');
+              setStatusFilter('all');
+            }}
+            className="text-xs font-bold text-[#2271b1] hover:underline cursor-pointer"
+          >
+            Clear filters
+          </button>
+        </div>
+      )}
 
       {/* TAB 1: BLOGS */}
       {activeTab === 'blogs' && (
@@ -441,6 +541,18 @@ export default function AdminContentPage() {
 
                 <div className="flex items-center gap-1">
                   <button
+                    type="button"
+                    onClick={() => toggleBlogPublished(post.id)}
+                    className={`px-2 py-1 rounded-lg text-[10px] font-extrabold transition-colors cursor-pointer ${
+                      post.isPublished
+                        ? 'text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-800'
+                        : 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/25'
+                    }`}
+                    title={post.isPublished ? 'Move to drafts' : 'Publish now'}
+                  >
+                    {post.isPublished ? 'Unpublish' : 'Publish'}
+                  </button>
+                  <button
                     onClick={() => handleEditBlog(post)}
                     className="p-1.5 rounded-lg hover:bg-stone-200 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-300 transition-colors cursor-pointer"
                     title="Edit Post"
@@ -462,7 +574,7 @@ export default function AdminContentPage() {
       )}
 
       {/* TAB 2: PAGES */}
-      {activeTab === 'pages' && (
+      {activeTab === 'pages' && filteredPages.length > 0 && (
         <div className="bg-white dark:bg-[#151311] border border-stone-200 dark:border-[#24211d] rounded-2xl overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
@@ -472,6 +584,7 @@ export default function AdminContentPage() {
                   <th className="py-3 px-4">Route URL</th>
                   <th className="py-3 px-4">Category</th>
                   <th className="py-3 px-4">Nav Placement</th>
+                  <th className="py-3 px-4">Status</th>
                   <th className="py-3 px-4">Last Updated</th>
                   <th className="py-3 px-4 text-right">Actions</th>
                 </tr>
@@ -497,6 +610,20 @@ export default function AdminContentPage() {
                     </td>
                     <td className="py-3 px-4 capitalize text-stone-500 dark:text-stone-400">
                       {page.navSection}
+                    </td>
+                    <td className="py-3 px-4">
+                      <button
+                        type="button"
+                        onClick={() => togglePagePublished(page.id)}
+                        title={page.isPublished ? 'Click to unpublish' : 'Click to publish'}
+                        className={`px-2 py-0.5 rounded-full text-[10px] font-bold cursor-pointer transition-colors ${
+                          page.isPublished
+                            ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/25'
+                            : 'bg-stone-200 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-300'
+                        }`}
+                      >
+                        {page.isPublished ? 'Live' : 'Draft'}
+                      </button>
                     </td>
                     <td className="py-3 px-4 text-stone-500 dark:text-stone-400">
                       {page.lastUpdated}
@@ -884,5 +1011,13 @@ export default function AdminContentPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function AdminContentPage() {
+  return (
+    <Suspense fallback={<div className="h-40 rounded-2xl bg-stone-200/60 dark:bg-[#151311] animate-pulse" />}>
+      <ContentWorkspace />
+    </Suspense>
   );
 }

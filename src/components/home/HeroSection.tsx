@@ -223,8 +223,8 @@ export function HeroSection() {
                 href={`/product/${product.slug}`}
                 className="group flex items-center gap-4 p-3 pr-4 rounded-2xl bg-[#110f0d]/80 backdrop-blur-md border border-white/10 hover:border-[#F5821F]/60 shadow-2xl transition-colors"
               >
-                <div className="relative w-20 h-20 shrink-0 rounded-xl overflow-hidden bg-[#1b1916]">
-                  <Image src={product.imageUrl} alt="" fill sizes="80px" className="object-cover" />
+                <div className="relative w-20 h-20 shrink-0 rounded-xl overflow-hidden bg-transparent flex items-center justify-center p-1">
+                  <Image src={product.imageUrl} alt="" fill sizes="80px" className="object-contain" />
                 </div>
                 <div className="min-w-0 space-y-1">
                   <span className="text-[11px] font-bold text-[#F5821F] uppercase tracking-wider">

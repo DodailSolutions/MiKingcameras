@@ -71,3 +71,16 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #F5821F;
 }
+
+/* Admin panel motion */
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+@keyframes popIn {
+  from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  [class*="animate-["] { animation: none !important; }
+}

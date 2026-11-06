@@ -126,12 +126,11 @@ export const INITIAL_PRODUCTS: Product[] = [
     "salePrice": 8500,
     "rating": 4.6,
     "reviewCount": 64,
-    "imageUrl": "https://mikcameras.in/wp-content/uploads/2026/02/IMG_3460-2-scaled.jpg",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/7/70/Canon_EF_40mm_STM_lens_(clean).JPG",
     "images": [
-      "https://mikcameras.in/wp-content/uploads/2026/02/IMG_3460-2-scaled.jpg",
-      "https://mikcameras.in/wp-content/uploads/2026/09/WhatsApp-Image-2026-02-23-at-2.42.03-PM-1-1.webp",
-      "https://mikcameras.in/wp-content/uploads/2026/09/WhatsApp-Image-2026-02-23-at-2.42.03-PM-3.webp",
-      "https://mikcameras.in/wp-content/uploads/2026/09/WhatsApp-Image-2026-02-23-at-2.42.03-PM-2-1.webp"
+      "https://upload.wikimedia.org/wikipedia/commons/7/70/Canon_EF_40mm_STM_lens_(clean).JPG",
+      "https://upload.wikimedia.org/wikipedia/commons/8/8e/Canon_EF_40mm_with_cap.jpg",
+      "https://images.unsplash.com/photo-1617005082133-548c4dd27f35?auto=format&fit=crop&w=800&q=80"
     ],
     "inStock": true,
     "warranty": "1 Year Store Warranty",

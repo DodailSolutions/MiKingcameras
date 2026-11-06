@@ -49,9 +49,17 @@ interface ThemeConfig {
   footerAbout: string;
   whatsappNumber: string;
   whatsappIdrees: string;
+  whatsappIdreesName: string;
+  whatsappIdreesRole: string;
   whatsappShoeb: string;
+  whatsappShoebName: string;
+  whatsappShoebRole: string;
   whatsappZameer: string;
+  whatsappZameerName: string;
+  whatsappZameerRole: string;
   whatsappSupport: string;
+  whatsappSupportName: string;
+  whatsappSupportRole: string;
   copyrightText: string;
 }
 
@@ -61,7 +69,7 @@ const DEFAULT_THEME: ThemeConfig = {
   tagline: 'Hyderabad Premium DSLR, Mirrorless & Drone Equipment Hub',
   accentColor: '#F5821F',
 
-  announcementText: 'Free Shipping on Orders Above ₹5,000',
+  announcementText: 'Free Shipping on Orders Above ₹25,000',
   phone: '+91 90322 85420',
   email: 'mikingsdslrshop@gmail.com',
   location: 'Hyderabad, India',
@@ -75,15 +83,23 @@ const DEFAULT_THEME: ThemeConfig = {
   heroHeadline: 'Upgrade Your',
   heroHighlight: 'Photography Gear',
   heroDescription:
-    'New and certified pre-owned Canon, Nikon and Sony cameras, tested in our Hyderabad store and backed by up to 2 years of warranty.',
+    'New and certified pre-owned Canon, Nikon, Sony and Lumix cameras, tested in our Hyderabad store and backed by 2 years of store warranty.',
 
   footerAbout:
     'Your trusted destination for cameras, lenses, drones, and professional photography gear in Hyderabad and across India.',
   whatsappNumber: '+91 90322 85420',
   whatsappIdrees: '+91 63058 75376',
+  whatsappIdreesName: 'Mohd Idrees',
+  whatsappIdreesRole: 'Father & Guiding Pillar | Camera Specialist',
   whatsappShoeb: '+91 90322 85420',
+  whatsappShoebName: 'Mohd Waseem',
+  whatsappShoebRole: 'Founder & Visionary | Business Strategy',
   whatsappZameer: '+91 90322 85420',
+  whatsappZameerName: 'Mohd Allauddin',
+  whatsappZameerRole: 'The Photography Expert & Social Media Handler (MBA)',
   whatsappSupport: '+91 63058 75376',
+  whatsappSupportName: 'Mohd Jafar',
+  whatsappSupportRole: 'The Talented & Operations Head | Store Support',
   copyrightText: "© 2026 Mi King's Cameras. All Rights Reserved.",
 };
 
@@ -326,117 +342,197 @@ export default function ThemeCustomizerPage() {
                 {/* Agent 1: Mohd Idrees */}
                 <div className="p-3.5 rounded-xl bg-stone-50 dark:bg-[#1b1916] border border-stone-200 dark:border-stone-800 space-y-2">
                   <div className="flex items-center justify-between">
-                    <div>
-                      <span className="text-xs font-bold text-stone-900 dark:text-white block">
-                        Mohd Idrees (Founder &amp; Camera Specialist)
-                      </span>
-                      <span className="text-[10px] text-stone-500">
-                        DSLR &amp; Mirrorless Bodies • Pro Kits • Equipment Trade-ins
-                      </span>
-                    </div>
+                    <span className="text-xs font-bold text-stone-900 dark:text-white">
+                      Agent 1: Camera Specialist &amp; Founder
+                    </span>
                     <a
-                      href={`https://wa.me/${(theme.whatsappIdrees || theme.phone || '').replace(/\D/g, '')}?text=Test%20Mohd%20Idrees%20WhatsApp`}
+                      href={`https://wa.me/${(theme.whatsappIdrees || theme.phone || '').replace(/\D/g, '')}?text=Test%20WhatsApp`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-[10px] font-bold text-[#25D366] hover:underline"
                     >
-                      Test Link
+                      Test WhatsApp Link
                     </a>
                   </div>
-                  <input
-                    type="text"
-                    value={theme.whatsappIdrees}
-                    onChange={(e) => setTheme({ ...theme, whatsappIdrees: e.target.value })}
-                    placeholder="+91 63058 75376"
-                    className="w-full bg-white dark:bg-[#141210] border border-stone-300 dark:border-stone-700 rounded-xl px-3 py-2 text-xs text-stone-900 dark:text-white focus:outline-none focus:border-[#25D366]"
-                  />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div>
+                      <label className="text-[10px] text-stone-500 block mb-0.5">Visible Name</label>
+                      <input
+                        type="text"
+                        value={theme.whatsappIdreesName}
+                        onChange={(e) => setTheme({ ...theme, whatsappIdreesName: e.target.value })}
+                        placeholder="Mohd Idrees"
+                        className="w-full bg-white dark:bg-[#141210] border border-stone-300 dark:border-stone-700 rounded-xl px-3 py-1.5 text-xs text-stone-900 dark:text-white focus:outline-none focus:border-[#25D366]"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[10px] text-stone-500 block mb-0.5">Role / Specialties</label>
+                      <input
+                        type="text"
+                        value={theme.whatsappIdreesRole}
+                        onChange={(e) => setTheme({ ...theme, whatsappIdreesRole: e.target.value })}
+                        placeholder="Founder & Camera Specialist"
+                        className="w-full bg-white dark:bg-[#141210] border border-stone-300 dark:border-stone-700 rounded-xl px-3 py-1.5 text-xs text-stone-900 dark:text-white focus:outline-none focus:border-[#25D366]"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-stone-500 block mb-0.5">WhatsApp Mobile Number</label>
+                    <input
+                      type="text"
+                      value={theme.whatsappIdrees}
+                      onChange={(e) => setTheme({ ...theme, whatsappIdrees: e.target.value })}
+                      placeholder="+91 63058 75376"
+                      className="w-full bg-white dark:bg-[#141210] border border-stone-300 dark:border-stone-700 rounded-xl px-3 py-1.5 text-xs text-stone-900 dark:text-white focus:outline-none focus:border-[#25D366]"
+                    />
+                  </div>
                 </div>
 
-                {/* Agent 2: Mohd Shoeb */}
+                {/* Agent 2: Mohd Waseem / Optics */}
                 <div className="p-3.5 rounded-xl bg-stone-50 dark:bg-[#1b1916] border border-stone-200 dark:border-stone-800 space-y-2">
                   <div className="flex items-center justify-between">
-                    <div>
-                      <span className="text-xs font-bold text-stone-900 dark:text-white block">
-                        Mohd Shoeb (Master Optics &amp; Lens Technician)
-                      </span>
-                      <span className="text-[10px] text-stone-500">
-                        Prime &amp; Telephoto Lenses • Mount Compatibility • Optical Testing
-                      </span>
-                    </div>
+                    <span className="text-xs font-bold text-stone-900 dark:text-white">
+                      Agent 2: Master Optics &amp; Business Strategy
+                    </span>
                     <a
-                      href={`https://wa.me/${(theme.whatsappShoeb || '').replace(/\D/g, '')}?text=Test%20Mohd%20Shoeb%20WhatsApp`}
+                      href={`https://wa.me/${(theme.whatsappShoeb || '').replace(/\D/g, '')}?text=Test%20WhatsApp`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-[10px] font-bold text-[#25D366] hover:underline"
                     >
-                      Test Link
+                      Test WhatsApp Link
                     </a>
                   </div>
-                  <input
-                    type="text"
-                    value={theme.whatsappShoeb}
-                    onChange={(e) => setTheme({ ...theme, whatsappShoeb: e.target.value })}
-                    placeholder="+91 90322 85420"
-                    className="w-full bg-white dark:bg-[#141210] border border-stone-300 dark:border-stone-700 rounded-xl px-3 py-2 text-xs text-stone-900 dark:text-white focus:outline-none focus:border-[#25D366]"
-                  />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div>
+                      <label className="text-[10px] text-stone-500 block mb-0.5">Visible Name</label>
+                      <input
+                        type="text"
+                        value={theme.whatsappShoebName}
+                        onChange={(e) => setTheme({ ...theme, whatsappShoebName: e.target.value })}
+                        placeholder="Mohd Waseem"
+                        className="w-full bg-white dark:bg-[#141210] border border-stone-300 dark:border-stone-700 rounded-xl px-3 py-1.5 text-xs text-stone-900 dark:text-white focus:outline-none focus:border-[#25D366]"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[10px] text-stone-500 block mb-0.5">Role / Specialties</label>
+                      <input
+                        type="text"
+                        value={theme.whatsappShoebRole}
+                        onChange={(e) => setTheme({ ...theme, whatsappShoebRole: e.target.value })}
+                        placeholder="Founder & Visionary | Master Optics"
+                        className="w-full bg-white dark:bg-[#141210] border border-stone-300 dark:border-stone-700 rounded-xl px-3 py-1.5 text-xs text-stone-900 dark:text-white focus:outline-none focus:border-[#25D366]"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-stone-500 block mb-0.5">WhatsApp Mobile Number</label>
+                    <input
+                      type="text"
+                      value={theme.whatsappShoeb}
+                      onChange={(e) => setTheme({ ...theme, whatsappShoeb: e.target.value })}
+                      placeholder="+91 90322 85420"
+                      className="w-full bg-white dark:bg-[#141210] border border-stone-300 dark:border-stone-700 rounded-xl px-3 py-1.5 text-xs text-stone-900 dark:text-white focus:outline-none focus:border-[#25D366]"
+                    />
+                  </div>
                 </div>
 
-                {/* Agent 3: Mohd Zameer */}
+                {/* Agent 3: Mohd Allauddin / Video & Consultation */}
                 <div className="p-3.5 rounded-xl bg-stone-50 dark:bg-[#1b1916] border border-stone-200 dark:border-stone-800 space-y-2">
                   <div className="flex items-center justify-between">
-                    <div>
-                      <span className="text-xs font-bold text-stone-900 dark:text-white block">
-                        Mohd Zameer (Commercial Video, Drones &amp; Gimbals)
-                      </span>
-                      <span className="text-[10px] text-stone-500">
-                        DJI Drones • Ronin Stabilizers • Wireless Mics • Studio Lighting
-                      </span>
-                    </div>
+                    <span className="text-xs font-bold text-stone-900 dark:text-white">
+                      Agent 3: Photography Expert &amp; Social Media (MBA)
+                    </span>
                     <a
-                      href={`https://wa.me/${(theme.whatsappZameer || '').replace(/\D/g, '')}?text=Test%20Mohd%20Zameer%20WhatsApp`}
+                      href={`https://wa.me/${(theme.whatsappZameer || '').replace(/\D/g, '')}?text=Test%20WhatsApp`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-[10px] font-bold text-[#25D366] hover:underline"
                     >
-                      Test Link
+                      Test WhatsApp Link
                     </a>
                   </div>
-                  <input
-                    type="text"
-                    value={theme.whatsappZameer}
-                    onChange={(e) => setTheme({ ...theme, whatsappZameer: e.target.value })}
-                    placeholder="+91 90322 85420"
-                    className="w-full bg-white dark:bg-[#141210] border border-stone-300 dark:border-stone-700 rounded-xl px-3 py-2 text-xs text-stone-900 dark:text-white focus:outline-none focus:border-[#25D366]"
-                  />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div>
+                      <label className="text-[10px] text-stone-500 block mb-0.5">Visible Name</label>
+                      <input
+                        type="text"
+                        value={theme.whatsappZameerName}
+                        onChange={(e) => setTheme({ ...theme, whatsappZameerName: e.target.value })}
+                        placeholder="Mohd Allauddin"
+                        className="w-full bg-white dark:bg-[#141210] border border-stone-300 dark:border-stone-700 rounded-xl px-3 py-1.5 text-xs text-stone-900 dark:text-white focus:outline-none focus:border-[#25D366]"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[10px] text-stone-500 block mb-0.5">Role / Specialties</label>
+                      <input
+                        type="text"
+                        value={theme.whatsappZameerRole}
+                        onChange={(e) => setTheme({ ...theme, whatsappZameerRole: e.target.value })}
+                        placeholder="Photography Expert & Customer Consultation"
+                        className="w-full bg-white dark:bg-[#141210] border border-stone-300 dark:border-stone-700 rounded-xl px-3 py-1.5 text-xs text-stone-900 dark:text-white focus:outline-none focus:border-[#25D366]"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-stone-500 block mb-0.5">WhatsApp Mobile Number</label>
+                    <input
+                      type="text"
+                      value={theme.whatsappZameer}
+                      onChange={(e) => setTheme({ ...theme, whatsappZameer: e.target.value })}
+                      placeholder="+91 90322 85420"
+                      className="w-full bg-white dark:bg-[#141210] border border-stone-300 dark:border-stone-700 rounded-xl px-3 py-1.5 text-xs text-stone-900 dark:text-white focus:outline-none focus:border-[#25D366]"
+                    />
+                  </div>
                 </div>
 
-                {/* Agent 4: Orders & GST Support */}
+                {/* Agent 4: Mohd Jafar / Operations & Customer Care */}
                 <div className="p-3.5 rounded-xl bg-stone-50 dark:bg-[#1b1916] border border-stone-200 dark:border-stone-800 space-y-2">
                   <div className="flex items-center justify-between">
-                    <div>
-                      <span className="text-xs font-bold text-stone-900 dark:text-white block">
-                        Orders &amp; GST Invoicing Desk
-                      </span>
-                      <span className="text-[10px] text-stone-500">
-                        Live AWB Tracking • 18% GST Tax Invoices • 1-Year Warranty Claims
-                      </span>
-                    </div>
+                    <span className="text-xs font-bold text-stone-900 dark:text-white">
+                      Agent 4: Operations Head &amp; Order Support
+                    </span>
                     <a
-                      href={`https://wa.me/${(theme.whatsappSupport || '').replace(/\D/g, '')}?text=Test%20Orders%20Desk%20WhatsApp`}
+                      href={`https://wa.me/${(theme.whatsappSupport || '').replace(/\D/g, '')}?text=Test%20WhatsApp`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-[10px] font-bold text-[#25D366] hover:underline"
                     >
-                      Test Link
+                      Test WhatsApp Link
                     </a>
                   </div>
-                  <input
-                    type="text"
-                    value={theme.whatsappSupport}
-                    onChange={(e) => setTheme({ ...theme, whatsappSupport: e.target.value })}
-                    placeholder="+91 63058 75376"
-                    className="w-full bg-white dark:bg-[#141210] border border-stone-300 dark:border-stone-700 rounded-xl px-3 py-2 text-xs text-stone-900 dark:text-white focus:outline-none focus:border-[#25D366]"
-                  />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div>
+                      <label className="text-[10px] text-stone-500 block mb-0.5">Visible Name</label>
+                      <input
+                        type="text"
+                        value={theme.whatsappSupportName}
+                        onChange={(e) => setTheme({ ...theme, whatsappSupportName: e.target.value })}
+                        placeholder="Mohd Jafar"
+                        className="w-full bg-white dark:bg-[#141210] border border-stone-300 dark:border-stone-700 rounded-xl px-3 py-1.5 text-xs text-stone-900 dark:text-white focus:outline-none focus:border-[#25D366]"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[10px] text-stone-500 block mb-0.5">Role / Specialties</label>
+                      <input
+                        type="text"
+                        value={theme.whatsappSupportRole}
+                        onChange={(e) => setTheme({ ...theme, whatsappSupportRole: e.target.value })}
+                        placeholder="Operations Head | 2-Year Warranty Support"
+                        className="w-full bg-white dark:bg-[#141210] border border-stone-300 dark:border-stone-700 rounded-xl px-3 py-1.5 text-xs text-stone-900 dark:text-white focus:outline-none focus:border-[#25D366]"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-stone-500 block mb-0.5">WhatsApp Mobile Number</label>
+                    <input
+                      type="text"
+                      value={theme.whatsappSupport}
+                      onChange={(e) => setTheme({ ...theme, whatsappSupport: e.target.value })}
+                      placeholder="+91 63058 75376"
+                      className="w-full bg-white dark:bg-[#141210] border border-stone-300 dark:border-stone-700 rounded-xl px-3 py-1.5 text-xs text-stone-900 dark:text-white focus:outline-none focus:border-[#25D366]"
+                    />
+                  </div>
                 </div>
               </div>
             </div>

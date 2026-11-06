@@ -27,7 +27,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL('https://mikcameras.in'),
   title: "MiKing's Cameras | Hyderabad's Premium DSLR, Mirrorless, Drones & Accessories",
-  description: "Official store for Mi King's DSLR Camera Shop. Shop Canon, Nikon, Sony Alpha, DJI Drones, lenses, and certified pre-owned equipment with 30-day returns and 1-2 year warranty.",
+  description: "Official store for Mi King's DSLR Camera Shop. Shop Canon, Nikon, Sony Alpha, DJI Drones, lenses, and certified pre-owned equipment with 1-2 year store warranty and 25-point inspection.",
   keywords: "Mi King cameras, camera shop Hyderabad, DSLR cameras, mirrorless cameras, Canon 90D, Nikon D7500, Sony A7, DJI Drones, camera lenses Hyderabad",
   manifest: '/manifest.webmanifest',
   icons: {
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "MiKing's Cameras — Premium Photography & Cinema Equipment",
-    description: "New & Certified Pre-Owned DSLRs, Mirrorless Bodies, Drones & Gimbals in Hyderabad with 30-day returns.",
+    description: "New & Certified Pre-Owned DSLRs, Mirrorless Bodies, Drones & Gimbals in Hyderabad with 1-2 year store warranty.",
     url: 'https://mikcameras.in',
     siteName: "MiKing's Cameras",
     images: [

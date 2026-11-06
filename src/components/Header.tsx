@@ -183,12 +183,12 @@ export function Header() {
                   }}
                   className="flex items-center gap-3 p-3 hover:bg-stone-50 dark:hover:bg-[#201d19] transition-colors group cursor-pointer"
                 >
-                  <div className="relative w-11 h-11 rounded-xl bg-white border border-stone-200 dark:border-stone-800 overflow-hidden shrink-0 flex items-center justify-center p-1">
+                  <div className="relative w-11 h-11 rounded-xl bg-transparent border border-stone-200/80 dark:border-stone-800 overflow-hidden shrink-0 flex items-center justify-center p-1">
                     <Image
                       src={p.imageUrl}
                       alt={p.name}
                       fill
-                      className="object-contain p-1 mix-blend-multiply contrast-[1.32] brightness-[1.20] [mask-image:radial-gradient(ellipse_at_center,black_74%,transparent_100%)]"
+                      className="object-contain p-0.5"
                     />
                   </div>
 
@@ -256,7 +256,7 @@ export function Header() {
           {/* Mobile view (< sm): concise single-line announcement */}
           <div className="flex sm:hidden items-center gap-1.5 text-[#F5821F] font-bold truncate">
             <Truck className="w-3.5 h-3.5 shrink-0" />
-            <span className="truncate">Free Shipping Above ₹5,000</span>
+            <span className="truncate">Free Shipping Above ₹25,000</span>
           </div>
 
           {/* Tablet & Desktop view (sm+): full store info */}
@@ -280,7 +280,7 @@ export function Header() {
           <div className="flex items-center gap-3 shrink-0">
             <div className="hidden sm:flex items-center gap-1.5 text-[#F5821F] font-bold">
               <Truck className="w-3.5 h-3.5" />
-              <span>Free Shipping &gt; ₹5,000</span>
+              <span>Free Shipping &gt; ₹25,000</span>
             </div>
             <span className="hidden sm:inline text-stone-300 dark:text-[#2e2a25]">|</span>
             <ThemeToggle className="scale-85" />
@@ -328,7 +328,7 @@ export function Header() {
             </AnimatePresence>
           </div>
 
-          {/* Action Links (Track, Wishlist, Cart, Account) */}
+          {/* Action Links (Desktop: Track, Wishlist, Cart, Account | Mobile: Streamlined without redundant Cart/Wishlist) */}
           <div className="flex items-center gap-3 sm:gap-5 text-stone-700 dark:text-stone-300">
             <Link
               href="/track"
@@ -338,18 +338,19 @@ export function Header() {
               <span className="text-[10px] font-medium mt-0.5">Track Order</span>
             </Link>
 
+            {/* Wishlist - Visible on desktop/tablet, handled by MobileBottomNav on mobile */}
             <Link
               href="/wishlist"
-              className="flex flex-col items-center hover:text-[#F5821F] transition-colors text-center group relative"
+              className="hidden md:flex flex-col items-center hover:text-[#F5821F] transition-colors text-center group relative"
             >
               <Heart className="w-5 h-5 text-stone-500 dark:text-stone-400 group-hover:text-[#F5821F] transition-colors" />
               <span className="text-[10px] font-medium mt-0.5">Wishlist</span>
             </Link>
 
-            {/* Cart Trigger */}
+            {/* Cart Trigger - Visible on desktop/tablet, handled by MobileBottomNav on mobile */}
             <button
               onClick={() => setIsCartOpen(true)}
-              className="flex flex-col items-center hover:text-[#F5821F] transition-colors text-center group relative cursor-pointer"
+              className="hidden md:flex flex-col items-center hover:text-[#F5821F] transition-colors text-center group relative cursor-pointer"
             >
               <div className="relative">
                 <ShoppingBag className="w-5 h-5 text-stone-500 dark:text-stone-400 group-hover:text-[#F5821F] transition-colors" />
@@ -361,6 +362,16 @@ export function Header() {
               </div>
               <span className="text-[10px] font-medium mt-0.5">Cart ({itemCount})</span>
             </button>
+
+            {/* Mobile Call Store Direct Dial Button */}
+            <a
+              href="tel:+919032285420"
+              className="flex md:hidden flex-col items-center text-[#F5821F] hover:text-[#E0741A] transition-colors text-center px-2 py-1 rounded-xl bg-[#F5821F]/10 border border-[#F5821F]/20 shrink-0"
+              aria-label="Call Hyderabad Store"
+            >
+              <Phone className="w-4 h-4" />
+              <span className="text-[9px] font-bold mt-0.5">Call Store</span>
+            </a>
 
             <Link
               href="/account"
@@ -536,8 +547,8 @@ export function Header() {
                         key={product.id}
                         className="flex gap-4 p-3 bg-stone-50 dark:bg-[#110f0d] border border-stone-200 dark:border-[#2e2a25] rounded-xl"
                       >
-                        <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-white shrink-0 border border-stone-200 dark:border-[#2e2a25]">
-                          <Image src={product.imageUrl} alt={product.name} fill className="object-contain p-1 mix-blend-multiply" />
+                        <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-transparent shrink-0 border border-stone-200/80 dark:border-[#2e2a25] flex items-center justify-center p-1">
+                          <Image src={product.imageUrl} alt={product.name} fill className="object-contain p-0.5" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <h4 className="text-sm font-medium text-stone-900 dark:text-white truncate">{product.name}</h4>

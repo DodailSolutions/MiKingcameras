@@ -49,11 +49,24 @@ export function ProductCard({ product }: { product: Product }) {
     setCurrentImgIndex(idx);
   };
 
+  const FALLBACK_CATEGORY_IMAGES: Record<string, string> = {
+    lenses: 'https://images.unsplash.com/photo-1617005082133-548c4dd27f35?auto=format&fit=crop&w=600&q=80',
+    dslr: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=600&q=80',
+    mirrorless: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=600&q=80',
+    drones: 'https://images.unsplash.com/photo-1527977966376-1c8408f9f108?auto=format&fit=crop&w=600&q=80',
+    tripods: 'https://images.unsplash.com/photo-1495121553079-4c61bcce1894?auto=format&fit=crop&w=600&q=80',
+    lighting: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80',
+    bags: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=600&q=80',
+    audio: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=600&q=80',
+  };
+
   const handleImageError = () => {
-    // Graceful fallback to verified primary image if secondary angle 404s
-    if (currentImgSrc !== product.imageUrl) {
-      setCurrentImgSrc(product.imageUrl);
-      setCurrentImgIndex(0);
+    // Try next image in list if available
+    if (currentImgIndex + 1 < imageList.length) {
+      setCurrentImgIndex((prev) => prev + 1);
+    } else {
+      const fallback = FALLBACK_CATEGORY_IMAGES[product.category] || FALLBACK_CATEGORY_IMAGES.dslr;
+      setCurrentImgSrc(fallback);
     }
   };
 
@@ -104,8 +117,8 @@ export function ProductCard({ product }: { product: Product }) {
         </button>
       </div>
 
-      {/* Product Image on Pure Studio White Container (Eliminates All Image Backgrounds & Preserves Razor-Sharp Quality) */}
-      <div className="relative h-[200px] sm:h-[210px] w-full overflow-hidden bg-white dark:bg-white border-b border-stone-200 dark:border-stone-800 shrink-0 flex items-center justify-center">
+      {/* Product Image Container */}
+      <div className="relative h-[200px] sm:h-[210px] w-full overflow-hidden bg-transparent border-b border-stone-100 dark:border-[#2a2621] shrink-0 flex items-center justify-center">
         <Link
           href={`/product/${product.slug}`}
           className="block w-full h-full relative p-3 flex items-center justify-center cursor-pointer"
@@ -115,7 +128,7 @@ export function ProductCard({ product }: { product: Product }) {
             alt={`${product.name} - Angle ${currentImgIndex + 1}`}
             fill
             onError={handleImageError}
-            className="object-contain p-3 group-hover:scale-105 transition-transform duration-500 mix-blend-multiply contrast-[1.32] brightness-[1.20] saturate-[1.08] [mask-image:radial-gradient(ellipse_at_center,black_72%,transparent_100%)]"
+            className="object-contain p-2.5 group-hover:scale-105 transition-transform duration-300 drop-shadow-sm"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
           />
         </Link>
@@ -161,7 +174,10 @@ export function ProductCard({ product }: { product: Product }) {
       <div className="p-4 flex-1 flex flex-col justify-between space-y-3 bg-white dark:bg-[#181613]">
         <div className="space-y-1">
           <Link href={`/product/${product.slug}`} className="block group-hover:text-[#F5821F] transition-colors">
-            <h3 className="text-xs font-bold text-stone-900 dark:text-white line-clamp-2 leading-snug h-[2.5rem] flex items-start">
+            <h3
+              className="text-xs font-bold text-stone-900 dark:text-white line-clamp-3 leading-snug min-h-[3.25rem] overflow-hidden"
+              title={product.name}
+            >
               {product.name}
             </h3>
           </Link>

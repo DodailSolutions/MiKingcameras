@@ -77,12 +77,12 @@ export default function CartPage() {
               className="bg-white dark:bg-[#181613] border border-stone-200 dark:border-[#2a2621] rounded-2xl p-4 sm:p-5 flex gap-4 items-center justify-between shadow-sm transition-colors"
             >
               {/* Product Thumbnail */}
-              <div className="relative w-20 h-20 rounded-xl overflow-hidden bg-white dark:bg-white border border-stone-200 dark:border-stone-700 shrink-0">
+              <div className="relative w-20 h-20 rounded-xl overflow-hidden bg-transparent border border-stone-200/80 dark:border-stone-800 shrink-0 flex items-center justify-center">
                 <Image
                   src={product.imageUrl}
                   alt={product.name}
                   fill
-                  className="object-contain p-2 mix-blend-multiply contrast-[1.28] brightness-[1.14] saturate-[1.04]"
+                  className="object-contain p-1.5"
                 />
               </div>
 
@@ -150,17 +150,41 @@ export default function CartPage() {
               <span className="font-bold text-stone-900 dark:text-white">{formatINR(cartTotal)}</span>
             </div>
             <div className="flex justify-between">
-              <span>Taxes (18% GST):</span>
-              <span className="text-stone-900 dark:text-white font-medium">Included in Pricing</span>
+              <span>Taxes:</span>
+              <span className="text-stone-900 dark:text-white font-medium">₹0 (No GST / Retail Store Bill)</span>
             </div>
             <div className="flex justify-between">
               <span>All-India Insured Courier:</span>
-              <span className="text-emerald-600 dark:text-emerald-400 font-bold">FREE Delivery</span>
+              <span className={cartTotal >= 25000 ? "text-emerald-600 dark:text-emerald-400 font-bold" : "text-stone-900 dark:text-white font-bold"}>
+                {cartTotal >= 25000 ? "FREE Delivery (Above ₹25,000)" : "₹450 (Free over ₹25,000)"}
+              </span>
             </div>
             <div className="pt-3 border-t border-stone-200 dark:border-[#24211d] flex justify-between items-baseline">
               <span className="text-sm font-bold text-stone-900 dark:text-white">Total Amount:</span>
-              <span className="text-xl sm:text-2xl font-black text-[#F5821F]">{formatINR(cartTotal)}</span>
+              <span className="text-xl sm:text-2xl font-black text-[#F5821F]">
+                {formatINR(cartTotal + (cartTotal >= 25000 ? 0 : 450))}
+              </span>
             </div>
+          </div>
+
+          {/* Live Video Call Verification Advisory Clause */}
+          <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-xs space-y-1.5">
+            <span className="font-black flex items-center gap-1.5 text-xs text-amber-600 dark:text-amber-400 uppercase tracking-wide">
+              📹 Verify on Live Video Call First
+            </span>
+            <p className="text-[11px] leading-relaxed">
+              Don&apos;t buy directly without seeing! Call us on WhatsApp Video Call (+91 63058 75376) to inspect the camera, lens optics, and sensor live before transferring payment.
+            </p>
+            <a
+              href={`https://wa.me/916305875376?text=${encodeURIComponent(
+                "Hi Mi King's Cameras! I want to do a WhatsApp Video Call to inspect the equipment in my cart before making payment."
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 font-bold text-emerald-600 dark:text-emerald-400 hover:underline pt-1"
+            >
+              Start WhatsApp Video Inspection &rarr;
+            </a>
           </div>
 
           <Link
@@ -176,7 +200,7 @@ export default function CartPage() {
               <ShieldCheck className="w-4 h-4 text-[#F5821F]" />
               <span>Mi King&apos;s Store Assured Protection</span>
             </div>
-            <p>1 to 2 Years Warranty &bull; 30-Day Money Back Guarantee &bull; Insured Transit</p>
+            <p>2 Years Store Warranty &bull; 25-Point Verification &bull; All-India Insured Transit</p>
           </div>
         </div>
       </div>

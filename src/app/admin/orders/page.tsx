@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { Suspense, useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   ShoppingCart,
   Printer,
@@ -189,11 +190,16 @@ const SAMPLE_ORDERS: Order[] = [
   },
 ];
 
-export default function AdminOrdersPage() {
+function OrdersWorkspace() {
+  const searchParams = useSearchParams();
   const [orders, setOrders] = useState<Order[]>(SAMPLE_ORDERS);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-  const [viewTab, setViewTab] = useState<'all' | 'reorders'>('all');
+  // View tab lives in the URL so sidebar deep links (?view=reorders) work
+  const router = useRouter();
+  const viewTab: 'all' | 'reorders' = searchParams.get('view') === 'reorders' ? 'reorders' : 'all';
+  const setViewTab = (view: 'all' | 'reorders') =>
+    router.replace(view === 'reorders' ? '/admin/orders?view=reorders' : '/admin/orders', { scroll: false });
   const [selectedInvoice, setSelectedInvoice] = useState<InvoiceData | null>(null);
 
   const reordersCount = orders.filter((o) => o.isReorder).length;
@@ -247,18 +253,18 @@ export default function AdminOrdersPage() {
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
       {/* ------------------------------------------------------------- */}
-      {/* WordPress WooCommerce Page Header */}
+      {/* Mi King's Orders Page Header */}
       {/* ------------------------------------------------------------- */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-3 border-b border-stone-300 dark:border-stone-800">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-stone-900 dark:text-white flex items-center gap-2">
             <span>Orders &amp; Reorder Management</span>
             <span className="text-xs font-normal text-stone-500 bg-stone-200 dark:bg-stone-800 px-2 py-0.5 rounded">
-              WooCommerce Next
+              Store Dispatch
             </span>
           </h1>
           <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
-            Track customer purchase history, who reordered what, courier dispatch status, and official 18% GST invoicing.
+            Track customer purchase history, who reordered what, courier dispatch status, and official Retail Store Invoicing &amp; 2-Year Warranty.
           </p>
         </div>
 
@@ -500,10 +506,10 @@ export default function AdminOrdersPage() {
                         type="button"
                         onClick={() => openInvoiceForOrder(order)}
                         className="px-2.5 py-1 rounded bg-[#2271b1] hover:bg-[#135e96] text-white font-bold text-[11px] inline-flex items-center gap-1 shadow-2xs transition-colors cursor-pointer"
-                        title="Download or Print GST Tax Invoice"
+                        title="Download or Print Retail Sales Bill & 2-Year Warranty"
                       >
                         <FileText className="w-3 h-3" />
-                        <span>GST Bill</span>
+                        <span>Store Bill</span>
                       </button>
                     </td>
                   </tr>
@@ -522,5 +528,13 @@ export default function AdminOrdersPage() {
         />
       )}
     </div>
+  );
+}
+
+export default function AdminOrdersPage() {
+  return (
+    <Suspense fallback={null}>
+      <OrdersWorkspace />
+    </Suspense>
   );
 }

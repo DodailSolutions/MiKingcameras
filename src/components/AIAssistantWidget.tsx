@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Bot,
@@ -72,6 +73,8 @@ function FormattedMessageText({ content }: { content: string }) {
 }
 
 export function AIAssistantWidget() {
+  const pathname = usePathname();
+  const isProductPage = pathname?.startsWith('/product');
   const [isOpen, setIsOpen] = useState(false);
   const [customer, setCustomer] = useState<AuthenticatedCustomer | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -189,8 +192,8 @@ export function AIAssistantWidget() {
 
   return (
     <>
-      {/* Sleek Floating Action Button (Compact Amazon/Myntra Modest Design) */}
-      <div className="fixed bottom-20 md:bottom-8 left-5 z-40 group">
+      {/* Sleek Floating Action Button (Always visible on mobile & desktop, elevated above bottom docks) */}
+      <div className={`fixed ${isProductPage ? 'bottom-32' : 'bottom-20'} md:bottom-8 left-4 sm:left-5 z-40 group block`}>
         <motion.button
           onClick={() => setIsOpen((prev) => !prev)}
           whileHover={{ scale: 1.08 }}
@@ -218,7 +221,7 @@ export function AIAssistantWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 25, scale: 0.96 }}
             transition={{ duration: 0.22, ease: 'easeOut' }}
-            className="fixed bottom-24 md:bottom-24 left-4 sm:left-6 z-50 w-[92vw] sm:w-[420px] h-[580px] max-h-[82vh] flex flex-col bg-white dark:bg-[#151311] border border-stone-200 dark:border-[#2a2621] rounded-3xl shadow-2xl overflow-hidden text-stone-900 dark:text-stone-100"
+            className={`fixed ${isProductPage ? 'bottom-36' : 'bottom-24'} md:bottom-24 left-3 sm:left-6 z-50 w-[94vw] sm:w-[420px] h-[580px] max-h-[80vh] flex flex-col bg-white dark:bg-[#151311] border border-stone-200 dark:border-[#2a2621] rounded-3xl shadow-2xl overflow-hidden text-stone-900 dark:text-stone-100`}
           >
             {/* Header (Modest, Clean E-Commerce Style) */}
             <div className="bg-stone-900 text-white p-4 border-b border-stone-800 flex items-center justify-between">

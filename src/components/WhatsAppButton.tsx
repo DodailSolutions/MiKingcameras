@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   MessageSquare,
@@ -78,7 +79,7 @@ const AGENTS: Agent[] = [
   },
   {
     id: 'support',
-    name: 'Orders & GST Invoicing Desk',
+    name: 'Orders & Retail Invoicing Desk',
     role: 'Store Logistics & Customer Care',
     department: 'billing',
     phone: '916305875376',
@@ -87,20 +88,23 @@ const AGENTS: Agent[] = [
     replyTime: 'Instant',
     avatarBg: 'bg-gradient-to-tr from-violet-600 to-purple-500',
     icon: FileText,
-    specialties: ['Live AWB Tracking', '18% GST Tax Invoices', '1-Year Warranty Claims'],
-    defaultMessage: 'Hello Mi King’s Support Desk! I am checking on my order status, courier AWB, or GST invoice.',
+    specialties: ['Live AWB Tracking', 'Retail Sales Bills', '2-Year Warranty Claims'],
+    defaultMessage: 'Hello Mi King’s Support Desk! I am checking on my order status, courier AWB, or 2-year warranty card.',
   },
 ];
 
 const QUICK_PROMPTS = [
   { label: '📸 Camera Body Inquiry', agentId: 'idrees', text: 'Hi Mohd Idrees, what camera bodies are currently available in stock?' },
+  { label: '📹 Live Video Call Inspection', agentId: 'idrees', text: 'Hi Mi King’s Cameras, I want to do a WhatsApp Video Call to inspect camera equipment live before buying.' },
   { label: '🔍 Lens Compatibility', agentId: 'shoeb', text: 'Hi Mohd Shoeb, will this lens mount fit my camera?' },
   { label: '🚚 Track My Courier AWB', agentId: 'support', text: 'Hi Support, could you please give me the live dispatch status of my order?' },
-  { label: '📄 18% GST Tax Invoice', agentId: 'support', text: 'Hi Support Desk, I need a GST invoice copy for my recent equipment purchase.' },
+  { label: '📄 Retail Bill & 2-Year Warranty', agentId: 'support', text: 'Hi Support Desk, I need a Retail Sales Bill and 2-Year Warranty Certificate copy.' },
   { label: '🤝 Sell / Exchange Used Gear', agentId: 'idrees', text: 'Hi Mohd Idrees, I want to sell or exchange my pre-owned camera equipment for an upgrade.' },
 ];
 
 export function WhatsAppButton() {
+  const pathname = usePathname();
+  const isProductPage = pathname?.startsWith('/product');
   const [isOpen, setIsOpen] = useState(false);
   const [selectedDept, setSelectedDept] = useState<'all' | 'cameras' | 'lenses' | 'video' | 'billing'>('all');
   const [customQuery, setCustomQuery] = useState('');
@@ -116,23 +120,38 @@ export function WhatsAppButton() {
           setAgents((prev) =>
             prev.map((agent) => {
               let newRawPhone = '';
-              if (agent.id === 'idrees' && cfg.whatsappIdrees) newRawPhone = cfg.whatsappIdrees;
-              else if (agent.id === 'shoeb' && cfg.whatsappShoeb) newRawPhone = cfg.whatsappShoeb;
-              else if (agent.id === 'zameer' && cfg.whatsappZameer) newRawPhone = cfg.whatsappZameer;
-              else if (agent.id === 'support' && (cfg.whatsappSupport || cfg.whatsappNumber)) {
-                newRawPhone = cfg.whatsappSupport || cfg.whatsappNumber;
+              let newName = '';
+              let newRole = '';
+
+              if (agent.id === 'idrees') {
+                if (cfg.whatsappIdrees) newRawPhone = cfg.whatsappIdrees;
+                if (cfg.whatsappIdreesName) newName = cfg.whatsappIdreesName;
+                if (cfg.whatsappIdreesRole) newRole = cfg.whatsappIdreesRole;
+              } else if (agent.id === 'shoeb') {
+                if (cfg.whatsappShoeb) newRawPhone = cfg.whatsappShoeb;
+                if (cfg.whatsappShoebName) newName = cfg.whatsappShoebName;
+                if (cfg.whatsappShoebRole) newRole = cfg.whatsappShoebRole;
+              } else if (agent.id === 'zameer') {
+                if (cfg.whatsappZameer) newRawPhone = cfg.whatsappZameer;
+                if (cfg.whatsappZameerName) newName = cfg.whatsappZameerName;
+                if (cfg.whatsappZameerRole) newRole = cfg.whatsappZameerRole;
+              } else if (agent.id === 'support') {
+                if (cfg.whatsappSupport || cfg.whatsappNumber) newRawPhone = cfg.whatsappSupport || cfg.whatsappNumber;
+                if (cfg.whatsappSupportName) newName = cfg.whatsappSupportName;
+                if (cfg.whatsappSupportRole) newRole = cfg.whatsappSupportRole;
               }
+
+              const updated = { ...agent };
+              if (newName) updated.name = newName;
+              if (newRole) updated.role = newRole;
 
               if (newRawPhone) {
                 const digits = newRawPhone.replace(/\D/g, '');
                 const cleanPhone = digits.length === 10 ? `91${digits}` : digits;
-                return {
-                  ...agent,
-                  phone: cleanPhone,
-                  displayPhone: newRawPhone.startsWith('+') ? newRawPhone : `+${newRawPhone}`,
-                };
+                updated.phone = cleanPhone;
+                updated.displayPhone = newRawPhone.startsWith('+') ? newRawPhone : `+${newRawPhone}`;
               }
-              return agent;
+              return updated;
             })
           );
         }
@@ -166,8 +185,8 @@ export function WhatsAppButton() {
 
   return (
     <>
-      {/* Sleek Floating Action Button (Compact Amazon/Myntra Modest Design) */}
-      <div className="fixed bottom-20 md:bottom-8 right-5 z-40 group">
+      {/* Sleek Floating Action Button (Elevated on mobile product pages to prevent overlapping price dock) */}
+      <div className={`fixed ${isProductPage ? 'bottom-32' : 'bottom-20'} md:bottom-8 right-5 z-40 group`}>
         <motion.button
           onClick={() => setIsOpen((prev) => !prev)}
           whileHover={{ scale: 1.08 }}

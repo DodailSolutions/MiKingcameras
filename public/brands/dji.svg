@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 36" fill="none">
+  <!-- Official DJI Drone Logo -->
+  <path d="M12 8H36C40.5 8 44 11.5 44 16V20C44 24.5 40.5 28 36 28H12V8ZM20 22H34C35.5 22 36.5 21 36.5 19.5V16.5C36.5 15 35.5 14 34 14H20V22ZM52 8H60V22C60 25.5 57 28 53.5 28C50 28 47 25.5 47 22H55C55 22.5 55.5 23 56 23C56.5 23 57 22.5 57 22V8ZM68 8H76V28H68V8Z" fill="#000000"/>
+  <text x="86" y="24" font-family="'Arial', sans-serif" font-weight="900" font-size="12" letter-spacing="1" fill="#78716C">DRONES</text>
+</svg>

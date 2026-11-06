@@ -101,7 +101,7 @@ export default function AboutPage() {
               <div className="lg:col-span-5 relative">
                 <div className="relative aspect-square max-w-md mx-auto rounded-2xl overflow-hidden border border-stone-200 dark:border-stone-800 shadow-lg bg-stone-100 dark:bg-stone-900">
                   <Image
-                    src="/about/father_mohd_idrees.png"
+                    src="/about/father_mohd_idrees.jpg"
                     alt="Mohd Idrees - Father and Guiding Pillar of Mi King's"
                     fill
                     className="object-cover"
@@ -135,7 +135,7 @@ export default function AboutPage() {
                   <div className="p-4 rounded-xl bg-stone-50 dark:bg-[#201d19] border border-stone-200/80 dark:border-[#2e2a25]">
                     <ShieldCheck className="w-5 h-5 text-[#F5821F] mb-1.5" />
                     <h4 className="text-xs font-bold text-stone-900 dark:text-white">Customer Trust</h4>
-                    <p className="text-[11px] text-stone-500 mt-0.5">30-day return policy and full warranty.</p>
+                    <p className="text-[11px] text-stone-500 mt-0.5">2-Year store warranty and verified authenticity.</p>
                   </div>
                 </div>
               </div>
@@ -158,12 +158,12 @@ export default function AboutPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-            {/* Brother 1: Founder */}
+            {/* Brother 1: Mohd Waseem */}
             <div className="bg-white dark:bg-[#181613] border border-stone-200 dark:border-[#2a2621] rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group">
               <div className="relative aspect-4/3 overflow-hidden bg-stone-100 dark:bg-stone-900">
                 <Image
-                  src="/about/founder_eldest_son.png"
-                  alt="Founder and Visionary - Eldest Son"
+                  src="/about/mohd_waseem.png"
+                  alt="Mohd Waseem - Founder & Visionary | Graduate"
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                   sizes="(max-width: 768px) 100vw, 33vw"
@@ -174,9 +174,9 @@ export default function AboutPage() {
                   <span className="text-[11px] font-black uppercase tracking-wider text-[#F5821F]">
                     Founder &amp; Visionary | Graduate
                   </span>
-                  <h3 className="text-lg font-black text-stone-900 dark:text-white">Eldest Brother</h3>
+                  <h3 className="text-lg font-black text-stone-900 dark:text-white">Mohd Waseem</h3>
                   <p className="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
-                    The strategic brain behind MI KINGS ENTERPRISES. A graduate by qualification, he transformed our father&apos;s teachings and his love for cameras into a premier retail brand. He oversees vendor relationships, official brand authorizations, and wholesale logistics.
+                    The eldest son and the brain behind MI KINGS ENTERPRISES. A graduate by qualification, he turned his father&apos;s teachings and his own passion for technology and cameras into a trusted store. He manages the overall business strategy and brand relations.
                   </p>
                 </div>
                 <div className="pt-2 border-t border-stone-100 dark:border-[#2a2621] text-[11px] font-semibold text-stone-500 flex items-center gap-1.5">
@@ -186,12 +186,12 @@ export default function AboutPage() {
               </div>
             </div>
 
-            {/* Brother 2: Photography Expert */}
+            {/* Brother 2: Mohd Allauddin */}
             <div className="bg-white dark:bg-[#181613] border border-stone-200 dark:border-[#2a2621] rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group">
               <div className="relative aspect-4/3 overflow-hidden bg-stone-100 dark:bg-stone-900">
                 <Image
-                  src="/about/expert_mba_son.png"
-                  alt="Photography Expert & Social Media Handler - MBA"
+                  src="/about/mohd_allauddin.png"
+                  alt="Mohd Allauddin - Photography Expert & Social Media Handler | MBA"
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                   sizes="(max-width: 768px) 100vw, 33vw"
@@ -200,11 +200,11 @@ export default function AboutPage() {
               <div className="p-6 flex-1 flex flex-col justify-between space-y-3">
                 <div className="space-y-1.5">
                   <span className="text-[11px] font-black uppercase tracking-wider text-[#F5821F]">
-                    Expert &amp; Advisor | MBA
+                    The Photography Expert &amp; Social Media Handler | MBA
                   </span>
-                  <h3 className="text-lg font-black text-stone-900 dark:text-white">Middle Brother</h3>
+                  <h3 className="text-lg font-black text-stone-900 dark:text-white">Mohd Allauddin</h3>
                   <p className="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
-                    The heart and creative soul of our store. An MBA by education and seasoned photographer with years of hands-on shooting with DSLRs, cine lenses, and gimbals. He leads 25-point camera testing and gives unbiased advice to buyers.
+                    The heart of our store. An MBA by qualification and a passionate photographer with years of hands-on experience with DSLRs, lenses and gears. If you are confused about which camera to buy, he is the person who will give you the most honest advice. He handles product testing, customer consultation and manages our social media presence.
                   </p>
                 </div>
                 <div className="pt-2 border-t border-stone-100 dark:border-[#2a2621] text-[11px] font-semibold text-stone-500 flex items-center gap-1.5">
@@ -214,12 +214,12 @@ export default function AboutPage() {
               </div>
             </div>
 
-            {/* Brother 3: Operations Head */}
+            {/* Brother 3: Mohd Jafar */}
             <div className="bg-white dark:bg-[#181613] border border-stone-200 dark:border-[#2a2621] rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group">
               <div className="relative aspect-4/3 overflow-hidden bg-stone-100 dark:bg-stone-900">
                 <Image
-                  src="/about/operations_youngest_son.png"
-                  alt="Talented Operations Head - Youngest Brother"
+                  src="/about/mohd_jafar.png"
+                  alt="Mohd Jafar - The Talented & Operations Head | Intermediate"
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                   sizes="(max-width: 768px) 100vw, 33vw"
@@ -228,16 +228,16 @@ export default function AboutPage() {
               <div className="p-6 flex-1 flex flex-col justify-between space-y-3">
                 <div className="space-y-1.5">
                   <span className="text-[11px] font-black uppercase tracking-wider text-[#F5821F]">
-                    Operations Head | Technology
+                    The Talented &amp; Operations Head | Intermediate
                   </span>
-                  <h3 className="text-lg font-black text-stone-900 dark:text-white">Youngest Brother</h3>
+                  <h3 className="text-lg font-black text-stone-900 dark:text-white">Mohd Jafar</h3>
                   <p className="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
-                    The energetic technological engine of the business. Quick, creative, and proactive, he manages digital storefront operations, daily order dispatch, customer support channels, and ensures our deliveries arrive safely and swiftly.
+                    The youngest, most talented, and energetic pillar of our team. With his Intermediate qualification and a creative mindset, he is a quick learner who manages the website and ensures your shopping experience is smooth and fast.
                   </p>
                 </div>
                 <div className="pt-2 border-t border-stone-100 dark:border-[#2a2621] text-[11px] font-semibold text-stone-500 flex items-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                  E-Commerce &amp; Dispatch Ops
+                  Website Operations &amp; Customer Experience
                 </div>
               </div>
             </div>
@@ -325,7 +325,7 @@ export default function AboutPage() {
               <div className="lg:col-span-6 relative">
                 <div className="relative aspect-4/3 rounded-2xl overflow-hidden border border-stone-200 dark:border-stone-800 shadow-md">
                   <Image
-                    src="/about/store_interior.jpeg"
+                    src="/about/hyderabad_store_showcase.png"
                     alt="Mi King's Cameras Hyderabad Storefront and Display"
                     fill
                     className="object-cover"

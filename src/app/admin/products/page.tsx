@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { Suspense, useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Package,
   Plus,
@@ -76,16 +77,28 @@ const DEFAULT_CATEGORIES: CategoryItem[] = [
   },
 ];
 
-export default function AdminProductsPage() {
+function ProductsWorkspace() {
+  const searchParams = useSearchParams();
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
   const [categories, setCategories] = useState<CategoryItem[]>(DEFAULT_CATEGORIES);
-  const [activeTab, setActiveTab] = useState<'all' | 'categories'>('all');
+  const router = useRouter();
+  const activeTab: 'all' | 'categories' = searchParams.get('tab') === 'categories' ? 'categories' : 'all';
+  const setActiveTab = (tab: 'all' | 'categories') =>
+    router.replace(tab === 'categories' ? '/admin/products?tab=categories' : '/admin/products', { scroll: false });
   const [search, setSearch] = useState('');
   const [selectedBrand, setSelectedBrand] = useState('All');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [stockFilter, setStockFilter] = useState<'all' | 'inStock' | 'outOfStock'>('all');
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isAddingNew, setIsAddingNew] = useState(false);
+
+  // Open the add-product form when arriving via ?action=new
+  const action = searchParams.get('action');
+  const [handledAction, setHandledAction] = useState<string | null>(null);
+  if (action !== handledAction) {
+    setHandledAction(action);
+    if (action === 'new') setIsAddingNew(true);
+  }
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // New Category Form State
@@ -918,5 +931,13 @@ export default function AdminProductsPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function AdminProductsPage() {
+  return (
+    <Suspense fallback={null}>
+      <ProductsWorkspace />
+    </Suspense>
   );
 }
