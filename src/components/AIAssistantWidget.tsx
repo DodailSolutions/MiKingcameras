@@ -7,19 +7,14 @@ import {
   Bot,
   X,
   Send,
-  Sparkles,
   Package,
-  ShieldCheck,
-  MapPin,
-  ExternalLink,
   RotateCcw,
   MessageSquare,
   Lock,
   ArrowRight,
-  UserCheck,
 } from 'lucide-react';
 import Link from 'next/link';
-import { RAGResponse, AuthenticatedCustomer } from '@/lib/rag-engine';
+import type { RAGResponse, AuthenticatedCustomer, ConversationMemory } from '@/lib/rag-engine';
 
 interface Message {
   id: string;
@@ -28,6 +23,47 @@ interface Message {
   timestamp: string;
   data?: RAGResponse;
 }
+
+// Chat transcript + public conversation memory survive page navigation within the tab
+const CHAT_STORAGE_KEY = 'mikings_assistant_chat_v2';
+const MAX_STORED_MESSAGES = 40;
+
+interface StoredChat {
+  customerId: string | null;
+  messages: Message[];
+  memory: ConversationMemory | null;
+}
+
+/** Private order answers are never written to storage */
+const isPrivateMessage = (m: Message) =>
+  !!m.data?.sourceContexts?.some((c) => c.startsWith('Customer Account'));
+
+function loadStoredChat(customerId: string | null): StoredChat | null {
+  try {
+    const raw = sessionStorage.getItem(CHAT_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as StoredChat;
+    if (parsed.customerId !== customerId || !Array.isArray(parsed.messages) || !parsed.messages.length) return null;
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+function saveStoredChat(chat: StoredChat) {
+  try {
+    sessionStorage.setItem(
+      CHAT_STORAGE_KEY,
+      JSON.stringify({ ...chat, messages: chat.messages.filter((m) => !isPrivateMessage(m)).slice(-MAX_STORED_MESSAGES) })
+    );
+  } catch {
+    // Storage full or blocked — the chat still works for this page view
+  }
+}
+
+let messageSeq = 0;
+const nextMessageId = (prefix: string) => `${prefix}-${Date.now()}-${++messageSeq}`;
+const nowLabel = () => new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
 const PUBLIC_SUGGESTIONS = [
   '📸 Cameras under ₹50,000',
@@ -80,54 +116,61 @@ export function AIAssistantWidget() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [memory, setMemory] = useState<ConversationMemory | null>(null);
+  const [hydrated, setHydrated] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Load authenticated customer session for privacy-gated assistance
+  const buildWelcome = (name?: string): Message => ({
+    id: nextMessageId('welcome'),
+    sender: 'assistant',
+    text: name
+      ? `Hello ${name}! How can I help you today? Ask me about our camera collection, your recent orders, or our store warranty.`
+      : "Hello! Welcome to Mi King's Cameras.\n\nI can assist you with:\n• Finding cameras, lenses and gear by model or budget\n• 1-Year Store Warranty, 25-point inspection and 30-day refunds\n• Showroom location at Pillar 103, Mir Alam Tank & store hours",
+    timestamp: 'Just now',
+  });
+
+  const resetConversation = () => {
+    setMessages([buildWelcome(customer?.name)]);
+    setMemory(null);
+    try {
+      sessionStorage.removeItem(CHAT_STORAGE_KEY);
+    } catch {
+      // ignore
+    }
+  };
+
+  // Load authenticated customer session for privacy-gated assistance, then restore this tab's chat
   useEffect(() => {
+    let loadedCustomer: AuthenticatedCustomer | null = null;
     try {
       const stored = localStorage.getItem('mikings_customer_session');
       if (stored) {
         const session = JSON.parse(stored);
         const storedOrders = localStorage.getItem('mikings_customer_orders');
-        const orders = storedOrders ? JSON.parse(storedOrders) : [];
-        setCustomer({
+        loadedCustomer = {
           id: session.id,
           name: session.name,
           email: session.email,
           phone: session.phone,
-          orders,
-        });
-
-        setMessages([
-          {
-            id: 'welcome-auth',
-            sender: 'assistant',
-            text: `Hello ${session.name}! How can I help you today? You can ask me about our camera collection, check your recent orders, or learn about our store warranty.`,
-            timestamp: 'Just now',
-          },
-        ]);
-      } else {
-        setMessages([
-          {
-            id: 'welcome-guest',
-            sender: 'assistant',
-            text: "Hello! Welcome to Mi King's Cameras.\n\nI can assist you with:\n• Finding cameras, lenses, and gear in our Hyderabad catalog\n• 1-Year Store Warranty & 25-Point inspection details\n• Showroom location at Pillar 103, Mir Alam Tank & store hours",
-            timestamp: 'Just now',
-          },
-        ]);
+          orders: storedOrders ? JSON.parse(storedOrders) : [],
+        };
       }
     } catch {
-      // Fallback guest welcome
-      setMessages([
-        {
-          id: 'welcome-default',
-          sender: 'assistant',
-          text: "Hello! Welcome to Mi King's Cameras. Feel free to ask about our camera catalog, lenses, store warranty, or showroom location.",
-          timestamp: 'Just now',
-        },
-      ]);
+      loadedCustomer = null;
     }
+
+    const restored = loadStoredChat(loadedCustomer?.id ?? null);
+    /* eslint-disable react-hooks/set-state-in-effect -- one-time hydration from browser storage */
+    setCustomer(loadedCustomer);
+    setMessages(restored?.messages ?? [buildWelcome(loadedCustomer?.name)]);
+    setMemory(restored?.memory ?? null);
+    setHydrated(true);
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
+
+  useEffect(() => {
+    if (hydrated) saveStoredChat({ customerId: customer?.id ?? null, messages, memory });
+  }, [hydrated, customer, messages, memory]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -144,10 +187,10 @@ export function AIAssistantWidget() {
     if (!textToSend.trim() || isLoading) return;
 
     const userMsg: Message = {
-      id: 'usr-' + Date.now(),
+      id: nextMessageId('usr'),
       sender: 'user',
       text: textToSend,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      timestamp: nowLabel(),
     };
 
     setMessages((prev) => [...prev, userMsg]);
@@ -161,25 +204,27 @@ export function AIAssistantWidget() {
         body: JSON.stringify({
           prompt: textToSend,
           user: customer,
+          memory,
         }),
       });
 
       const ragResult: RAGResponse = await res.json();
 
       const aiMsg: Message = {
-        id: 'ai-' + Date.now(),
+        id: nextMessageId('ai'),
         sender: 'assistant',
         text: ragResult.answer || "I'm here to help with camera gear, warranties, and showroom visits.",
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        timestamp: nowLabel(),
         data: ragResult,
       };
 
       setMessages((prev) => [...prev, aiMsg]);
+      if (ragResult.memory) setMemory(ragResult.memory);
     } catch {
       setMessages((prev) => [
         ...prev,
         {
-          id: 'err-' + Date.now(),
+          id: nextMessageId('err'),
           sender: 'assistant',
           text: "I couldn't reach the store catalog right now. Please reach out to our team on WhatsApp at +91 90322 85420.",
           timestamp: 'Just now',
@@ -244,6 +289,15 @@ export function AIAssistantWidget() {
                 </div>
               </div>
 
+              <div className="flex items-center gap-1.5">
+              <button
+                onClick={resetConversation}
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-stone-300 flex items-center justify-center transition-colors cursor-pointer"
+                aria-label="Start a new conversation"
+                title="New conversation"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+              </button>
               <button
                 onClick={() => setIsOpen(false)}
                 className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-stone-300 flex items-center justify-center transition-colors cursor-pointer"
@@ -251,6 +305,7 @@ export function AIAssistantWidget() {
               >
                 <X className="w-4 h-4" />
               </button>
+              </div>
             </div>
 
             {/* Quick Topic Chips (Modest Public Queries Only) */}
@@ -268,7 +323,7 @@ export function AIAssistantWidget() {
 
             {/* Messages Body */}
             <div className="flex-1 overflow-y-auto p-4 space-y-3.5">
-              {messages.map((msg) => (
+              {messages.map((msg, idx) => (
                 <div
                   key={msg.id}
                   className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}
@@ -347,6 +402,20 @@ export function AIAssistantWidget() {
                     )}
                   </div>
                   <span className="text-[10px] text-stone-400 mt-1 px-1">{msg.timestamp}</span>
+
+                  {msg.sender === 'assistant' && idx === messages.length - 1 && !isLoading && msg.data?.followUps?.length ? (
+                    <div className="flex flex-wrap gap-1.5 mt-1.5 max-w-[88%]">
+                      {msg.data.followUps.map((f) => (
+                        <button
+                          key={f}
+                          onClick={() => handleSend(f)}
+                          className="text-[11px] font-medium px-2.5 py-1 rounded-full border border-[#F5821F]/40 text-stone-700 dark:text-stone-300 hover:bg-[#F5821F] hover:text-black transition-colors cursor-pointer"
+                        >
+                          {f}
+                        </button>
+                      ))}
+                    </div>
+                  ) : null}
                 </div>
               ))}
 

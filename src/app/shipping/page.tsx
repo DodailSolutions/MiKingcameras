@@ -35,7 +35,7 @@ export default function ShippingPolicyPage() {
           <Truck className="w-5 h-5 text-[#F5821F]" />
           <h3 className="font-bold text-sm text-stone-900 dark:text-white">Free Insured Shipping</h3>
           <p className="text-stone-500 dark:text-stone-400 leading-relaxed">
-            Complimentary shipping on all camera and lens orders above ₹5,000 via Delhivery, BlueDart, and Shiprocket air express.
+            Complimentary shipping on all camera and lens orders above ₹25,000 via Delhivery, BlueDart, and Shiprocket air express.
           </p>
         </div>
 

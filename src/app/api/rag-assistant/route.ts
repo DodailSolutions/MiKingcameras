@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { queryRAGAssistant } from '@/lib/rag-engine';
+import { queryRAGAssistant, sanitizeMemory } from '@/lib/rag-engine';
 
 export const dynamic = 'force-dynamic';
 
@@ -8,17 +8,18 @@ export async function POST(request: Request) {
     const body = await request.json();
     const prompt = body?.prompt || body?.message || '';
     const user = body?.user || null;
+    const memory = sanitizeMemory(body?.memory);
 
-    if (!prompt || typeof prompt !== 'string' || !prompt.trim()) {
+    if (!prompt || typeof prompt !== 'string' || !prompt.trim() || prompt.length > 500) {
       return NextResponse.json(
         { error: 'Inquiry prompt is required' },
         { status: 400 }
       );
     }
 
-    const response = await queryRAGAssistant(prompt, user);
+    const response = await queryRAGAssistant(prompt, user, memory);
     return NextResponse.json(response);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('RAG Assistant API Error:', error);
     return NextResponse.json(
       {
